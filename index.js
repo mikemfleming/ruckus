@@ -1,10 +1,14 @@
 'use strict';
 
 const express = require('express');
+const bodyParser = require('body-parser');
+
 const app = express();
+app.use(bodyParser.json());
 
 app.post('/', function (req, res) {
-  res.status(200).send('Ruff!');
+  res.set('Content-Type', 'text/plain');
+  res.status(200).send(req.body.challenge);
   console.log('~~~~~~~~~~~~~~ RECIEVED REQUEST: ', req.body);
 });
 
