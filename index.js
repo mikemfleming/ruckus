@@ -5,6 +5,7 @@ const app = express();
 
 app.get('/', function (req, res) {
   res.status(200).send('Ruff!');
+  console.log('~~~~~~~~~~~~~~ RECIEVED REQUEST: ', req.body);
 });
 
 app.listen(8080, function () {
