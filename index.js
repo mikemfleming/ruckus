@@ -13,6 +13,6 @@ app.post('/', function (req, res) {
   res.status(200).send(req.body.challenge);
 });
 
-app.listen(8080, function () {
+app.listen(PORT, function () {
   console.log(`Spot Dawg is on port ${PORT}!`)
 });
