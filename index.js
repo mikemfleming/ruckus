@@ -9,7 +9,7 @@ const app = express();
 app.use(bodyParser.json());
 
 app.post('/', function (req, res) {
-  console.log('~~~~~~~~~~~~~~ RECIEVED REQUEST: ', req.body);
+  console.log('~~~~~~~~~~~~~~ RECIEVED REQUEST: ', JSON.stringify(req.body, null, 4));
   res.set('Content-Type', 'text/plain');
   res.status(200).send(req.body.challenge);
 });
