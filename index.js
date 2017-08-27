@@ -5,14 +5,12 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const PORT = process.env.PORT || 8080;
 
+const routes = require('./routes');
+
 const app = express();
 app.use(bodyParser.json());
 
-app.post('/', function (req, res) {
-  console.log('~~~~~~~~~~~~~~ RECIEVED REQUEST: ', JSON.stringify(req.body, null, 4));
-  res.set('Content-Type', 'text/plain');
-  res.status(200).send(req.body.challenge);
-});
+app.use('/', routes);
 
 app.listen(PORT, function () {
   console.log(`Spot Dawg is on port ${PORT}!`)
