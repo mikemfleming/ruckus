@@ -1,7 +1,9 @@
 'use strict';
+require('dotenv').config();
 
 const express = require('express');
 const bodyParser = require('body-parser');
+const PORT = process.env.PORT || 8080;
 
 const routes = require('./routes');
 
@@ -10,6 +12,6 @@ app.use(bodyParser.json());
 
 app.use('/', routes);
 
-app.listen(8080, function () {
-  console.log('Spot Dawg is on port 8080!')
+app.listen(PORT, function () {
+  console.log(`Spot Dawg is on port ${PORT}!`)
 });
