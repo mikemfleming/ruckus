@@ -1,10 +1,9 @@
 'use strict';
 
 const routes = require('express').Router();
-const spotify = require('./spotify.controller');
+const tracks = require('./tracks.controller');
 
 // POST /tracks
-routes.post('/tracks', spotify.addToPlaylist);
+routes.post('/tracks', tracks.add);
 
 module.exports = routes;
-  
