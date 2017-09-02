@@ -29,6 +29,8 @@ auth.login = function(req, res) {
 };
 
 auth.callback = function(req, res) {
+  console.log('>>> redirect_uri', redirect_uri);
+  console.log('>>> state', req.query.state);
 
   // requests refresh and access tokens from spotify after checking the state parameter
 
