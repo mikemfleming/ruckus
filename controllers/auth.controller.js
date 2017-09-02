@@ -4,7 +4,7 @@ const request = require('request');
 const util = require('../helpers/auth.util');
 const querystring = require('querystring');
 
-const redirect_uri = process.env.NODE_ENV === 'development' ? 'http://localhost:8888/callback' : 'http://limitless-ridge-78491.herokuapp.com/callback';
+const redirect_uri = process.env.SPOTIFY_REDIRECT_URI;
 const client_id = process.env.SPOTIFY_CLIENT_ID;
 const client_secret = process.env.SPOTIFY_CLIENT_SECRET;
 
@@ -29,9 +29,6 @@ auth.login = function(req, res) {
 };
 
 auth.callback = function(req, res) {
-  console.log('>>> redirect_uri', redirect_uri);
-  console.log('>>> state', req.query.state);
-
   // requests refresh and access tokens from spotify after checking the state parameter
 
   const code = req.query.code || null;
@@ -72,7 +69,7 @@ auth.callback = function(req, res) {
 
         // use the access token to access the Spotify Web API
         request.get(options, function(error, response, body) {
-          console.log(body);
+          // console.log(body);
         });
 
         // we can also pass the token to the browser to make requests from there
