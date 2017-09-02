@@ -1,14 +1,15 @@
 'use strict';
 
 const slack = require('../helpers/slack.util');
+const spotify = require('../helpers/spotify.util');
 const request = require('request');
 
 const tracks = {};
 
 tracks.add = function(req, res) {
-  // spotify.util.auth()
+  // spotify.util.getAuthToken()
 
-  // spotify.util.add()
+  // spotify.util.addTrack()
 
   // slack.util.sendOkStatus()
 };
