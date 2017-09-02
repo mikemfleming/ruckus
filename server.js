@@ -10,12 +10,14 @@ const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 
 // required files, directories, and variables
+const middleware = require('./middleware/index');
 const routes = require('./controllers/index');
 const PORT = process.env.PORT || 8888;
 
 // middleware
 app.use(bodyParser.json());
 app.use(cookieParser());
+app.use(middleware.spy);
 
 // serve static assets
 app.use(express.static(__dirname + '/public'));
