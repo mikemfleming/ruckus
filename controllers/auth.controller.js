@@ -21,7 +21,7 @@ auth.login = function(req, res) {
   res.redirect('https://accounts.spotify.com/authorize?' +
       querystring.stringify({
         response_type: 'code',
-        client_id: process.env.SPOTIFY_CLIENT_ID,
+        client_id: client_id,
         scope: scope,
         redirect_uri: redirect_uri,
         state: state,
@@ -69,7 +69,9 @@ auth.callback = function(req, res) {
 
         // use the access token to access the Spotify Web API
         request.get(options, function(error, response, body) {
-          // console.log(body);
+          console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!! USER AUTHED IN');
+          console.log(JSON.stringify(body, null, 4));
+          console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!! USER AUTHED IN');
         });
 
         // we can also pass the token to the browser to make requests from there
