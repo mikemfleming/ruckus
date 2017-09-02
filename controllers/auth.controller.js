@@ -4,7 +4,7 @@ const request = require('request');
 const util = require('../helpers/auth.util');
 const querystring = require('querystring');
 
-const redirect_uri = 'http://localhost:8888/callback';
+const redirect_uri = process.env.NODE_ENV === 'development' ? 'http://localhost:8888/callback' : 'http://limitless-ridge-78491.herokuapp.com/callback';
 const client_id = process.env.SPOTIFY_CLIENT_ID;
 const client_secret = process.env.SPOTIFY_CLIENT_SECRET;
 

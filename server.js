@@ -2,6 +2,7 @@
 
 // set env variables
 require('dotenv').config();
+const PORT = process.env.PORT || 8888;
 
 // required dependencies
 const express = require('express');
@@ -12,7 +13,6 @@ const cookieParser = require('cookie-parser');
 // required files, directories, and variables
 const middleware = require('./middleware/index');
 const routes = require('./controllers/index');
-const PORT = process.env.PORT || 8888;
 
 // middleware
 app.use(bodyParser.json());
