@@ -1,8 +1,7 @@
 'use strict';
 const url = require('url');
-const middleware = {};
 
-middleware.spy = function(req, res, next) {
+exports.spy = function(req, res, next) {
   console.log('begin ~~~~~~~~~~~~~~~~~~');
   console.log(`>>> RECIEVED ${req.method} REQUEST TO ${url.parse(req.url).pathname}`);
   if (Object.keys(req.body).length) {
@@ -17,5 +16,3 @@ middleware.spy = function(req, res, next) {
   console.log('end ~~~~~~~~~~~~~~~~~~~~');
   next();
 };
-
-module.exports = middleware;

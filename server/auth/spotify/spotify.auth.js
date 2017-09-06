@@ -1,7 +1,7 @@
 'use strict';
 
 const request = require('request');
-const util = require('../helpers/auth.util');
+const authUtil = require('../../helpers/auth.util');
 const querystring = require('querystring');
 
 const redirect_uri = process.env.SPOTIFY_REDIRECT_URI;
@@ -10,10 +10,8 @@ const client_secret = process.env.SPOTIFY_CLIENT_SECRET;
 
 const stateKey = 'spotify_auth_state';
 
-const auth = {};
-
-auth.login = function(req, res) {
-  const state = util.generateRandomString(16);
+exports.login = function(req, res) {
+  const state = authUtil.generateRandomString(16);
   res.cookie(stateKey, state);
 
   // request authorization from spotify
@@ -28,7 +26,7 @@ auth.login = function(req, res) {
       }));
 };
 
-auth.callback = function(req, res) {
+exports.callback = function(req, res) {
   // requests refresh and access tokens from spotify after checking the state parameter
 
   const code = req.query.code || null;
@@ -90,7 +88,7 @@ auth.callback = function(req, res) {
   }
 };
 
-auth.refreshToken = function(req, res) {
+exports.refreshToken = function(req, res) {
   // requesting access token from refresh token
   var refresh_token = req.query.refresh_token;
   var authOptions = {
@@ -112,5 +110,3 @@ auth.refreshToken = function(req, res) {
     }
   });
 };
-
-module.exports = auth;

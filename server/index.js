@@ -6,9 +6,8 @@ const app = express();
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 
-// required files, directories, and variables
-const middleware = require('../middleware/index');
-const routes = require('../controllers/index');
+// required files
+const middleware = require('./middleware');
 
 exports.listen = function(port) {
   // middleware
@@ -19,15 +18,13 @@ exports.listen = function(port) {
   // serve static assets
   app.use(express.static(__dirname + '/public'));
 
-  // begin request routing
-  app.use('/', routes);
-
-  // //Require module route files.
-  // require('./lib/vendor/tu/tu.routes')(server);
+  // set up routes
+  require('./api')(app);
+  require('./auth')(app);
 
   app.listen(port, function() {
     console.log(`Spot Dawg is on port ${port}!`)
-  })
+  });
 };
 
 exports.close = function (callback) {
