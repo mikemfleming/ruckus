@@ -1,9 +1,5 @@
 'use strict';
 
-// set env variables
-require('dotenv').config();
-const PORT = process.env.PORT || 8888;
-
 // required dependencies
 const express = require('express');
 const app = express();
@@ -14,18 +10,26 @@ const cookieParser = require('cookie-parser');
 const middleware = require('./middleware/index');
 const routes = require('./controllers/index');
 
-// middleware
-app.use(bodyParser.json());
-app.use(cookieParser());
-app.use(middleware.spy);
+exports.listen = function(port) {
+  // middleware
+  app.use(bodyParser.json());
+  app.use(cookieParser());
+  app.use(middleware.spy);
 
-// serve static assets
-app.use(express.static(__dirname + '/public'));
+  // serve static assets
+  app.use(express.static(__dirname + '/public'));
 
-// begin request routing
-app.use('/', routes);
+  // begin request routing
+  app.use('/', routes);
 
-// start server
-app.listen(PORT, function () {
-  console.log(`Spot Dawg is on port ${PORT}!`)
-});
+  // //Require module route files.
+  // require('./lib/vendor/tu/tu.routes')(server);
+
+  app.listen(port, function() {
+    console.log(`Spot Dawg is on port ${port}!`)
+  })
+};
+
+exports.close = function (callback) {
+  server.close(callback);
+};
