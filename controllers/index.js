@@ -3,18 +3,20 @@
 // begin express router
 const routes = require('express').Router();
 
-// required controllers
-const auth = require('./auth.controller');
+// controllers
 const tracks = require('./tracks.controller');
 
+// authentication
+const spotifyAuth = require('../auth/spotify.auth');
+
 // GET /login
-routes.get('/login', auth.login);
+routes.get('/login', spotifyAuth.login);
 
 // GET /callback
-routes.get('/callback', auth.callback);
+routes.get('/callback', spotifyAuth.callback);
 
 // GET /refreshToken
-routes.get('/refresh_token', auth.refreshToken);
+routes.get('/refresh_token', spotifyAuth.refreshToken);
 
 // POST /tracks
 routes.post('/tracks', tracks.add);
