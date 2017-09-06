@@ -7,8 +7,8 @@ const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 
 // required files, directories, and variables
-const middleware = require('./middleware/index');
-const routes = require('./controllers/index');
+const middleware = require('../middleware/index');
+const routes = require('../controllers/index');
 
 exports.listen = function(port) {
   // middleware
