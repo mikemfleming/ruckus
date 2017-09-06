@@ -16,7 +16,7 @@ exports.listen = function(port) {
   app.use(middleware.spy);
 
   // serve static assets
-  app.use(express.static(__dirname + '/public'));
+  app.use(express.static(__dirname + '/../public'));
 
   // set up routes
   require('./api')(app);
