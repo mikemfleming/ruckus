@@ -5,7 +5,7 @@ const routes = require('express').Router();
 
 // required files
 const tracks = require('./tracks.controller');
-const playlist = require('./playlist.controller');
+const playlists = require('./playlists.controller');
 
 // POST /tracks
 routes.post('/tracks', tracks.add);

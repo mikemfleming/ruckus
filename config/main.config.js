@@ -1,6 +1,6 @@
 'use strict';
 
-const _mainConfig = () => {
+module.exports = (() => {
   const NODE_ENV = process.env.NODE_ENV || 'development';
   const PORT = process.env.PORT || 8888;
   const SLACK_CLIENT_ID = process.env.SLACK_CLIENT_ID;
@@ -18,6 +18,4 @@ const _mainConfig = () => {
     SPOTIFY_CLIENT_SECRET,
     SPOTIFY_REDIRECT_URI,
   };
-};
-
-module.exports = _mainConfig();
+})();
