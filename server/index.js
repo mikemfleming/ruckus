@@ -26,7 +26,3 @@ exports.listen = function(port) {
     console.log(`Spot Dawg is on port ${port}!`)
   });
 };
-
-exports.close = function (callback) {
-  server.close(callback);
-};
