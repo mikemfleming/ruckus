@@ -23,6 +23,6 @@ exports.listen = function(port) {
   require('./auth')(app);
 
   app.listen(port, function() {
-    console.log(`Spot Dawg is on port ${port}!`)
+    console.log(`Spot Dawg is on port ${port}!`);
   });
 };
