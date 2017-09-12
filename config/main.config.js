@@ -9,6 +9,7 @@ module.exports = (() => {
   const SPOTIFY_CLIENT_SECRET = process.env.SPOTIFY_CLIENT_SECRET;
   const SPOTIFY_REDIRECT_URI = process.env.SPOTIFY_REDIRECT_URI;
   const MONGO_URL = process.env.MONGO_URL;
+  const SESSION_SECRET = process.env.SESSION_SECRET;
 
   return {
     NODE_ENV,
@@ -19,5 +20,6 @@ module.exports = (() => {
     SPOTIFY_CLIENT_SECRET,
     SPOTIFY_REDIRECT_URI,
     MONGO_URL,
+    SESSION_SECRET,
   };
 })();
