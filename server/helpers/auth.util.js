@@ -1,10 +1,8 @@
 'use strict';
 
-const auth = {};
-
 // generating a random string in client state (e.g., a cookie) helps validate responses to additionally
 // ensure that the request and response originated in the same browser. protects against csrf attacks.
-auth.generateRandomString = function(length) {
+exports.generateRandomString = (length) => {
   let text = '';
   const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 
@@ -13,5 +11,3 @@ auth.generateRandomString = function(length) {
   }
   return text;
 };
-
-module.exports = auth;

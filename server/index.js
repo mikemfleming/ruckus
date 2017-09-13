@@ -8,15 +8,16 @@ const cookieParser = require('cookie-parser');
 
 // required files
 const middleware = require('./middleware');
+const config = require('../config/main.config');
 
 exports.listen = function(port) {
   // middleware
   app.use(bodyParser.json());
   app.use(cookieParser());
-  app.use(middleware.spy);
+  // app.use(middleware.spy);
 
   // serve static assets
-  app.use(express.static(__dirname + '/../public'));
+  // app.use(express.static(__dirname + '/../public')); // previously used for spotify auth
 
   // set up routes
   require('./api')(app);
