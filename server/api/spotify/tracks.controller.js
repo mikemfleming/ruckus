@@ -1,5 +1,6 @@
 'use strict';
 
-exports.add = (data) => {
-
+exports.add = (req, res) => {
+  res.status(200);
+  res.send('dog shit\n')
 };

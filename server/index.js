@@ -10,6 +10,7 @@ const cookieParser = require('cookie-parser');
 // required files
 const middleware = require('./middleware');
 const auth = require('./auth');
+const api = require('./api');
 
 exports.listen = function(port) {
   // middleware
@@ -21,6 +22,7 @@ exports.listen = function(port) {
 
   // set up routes
   app.use('/auth', auth);
+  app.use('/api', api);
 
   app.listen(port, function() {
     console.log(`Spot Dawg is on port ${port}!`);
