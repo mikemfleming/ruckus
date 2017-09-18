@@ -3,8 +3,9 @@
 const slack = {};
 
 slack.challenge = function(req, res, next) {
+  console.log('fart')
   if (req.body.challenge) {
-    console.log('responding to challenge')
+    console.log('responding to challenge');
     res.set('Content-Type', 'text/plain');
     res.status(200).send(req.body.challenge);
   }
