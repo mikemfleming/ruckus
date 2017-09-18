@@ -2,8 +2,10 @@
 
 const spotifyAuth = require('./spotify.auth');
 
-module.exports = (app) => {
-  app.get('/oauth/login', spotifyAuth.login);
-  app.get('/callback', spotifyAuth.callback);
-  app.get('/refresh_token', spotifyAuth.refreshToken);
-};
+const router = require('express').Router();
+
+router.get('/login', spotifyAuth.login);
+router.get('/callback', spotifyAuth.callback);
+router.get('/refresh_token', spotifyAuth.refreshToken);
+
+module.exports = router;

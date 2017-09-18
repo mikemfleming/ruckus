@@ -1,11 +1,7 @@
 'use strict';
 
-const config = require('../../config/main.config');
+const router = require('express').Router();
 
-module.exports = (app) => {
-  // Spotify routes
-  require('./spotify')(app);
+router.use('/spotify', require('./spotify'));
 
-  // Auth
-  require('mauthra')({ app, db: config.MONGO_URL });
-};
+module.exports = router;
