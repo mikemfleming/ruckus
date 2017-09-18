@@ -1,9 +1,11 @@
 'use strict';
 
 const router = require('express').Router();
-const util = require('../helpers/api.util');
+const apiUtil = require('../helpers/api.util');
+const slackUtil = require('../helpers/slack.util');
 
-router.use(util.isAuthorized);
+router.use(apiUtil.isAuthorized);
+router.use(slackUtil.challenge);
 
 router.use('/spotify', require('./spotify'));
 
