@@ -1,7 +1,7 @@
 'use strict';
 
 module.exports = (() => {
-  const NODE_ENV = process.env.NODE_ENV || 'development';
+  const LOG_LEVEL = process.env.LOG_LEVEL || 'production';
   const PORT = process.env.PORT || 8888;
   const SLACK_CLIENT_ID = process.env.SLACK_CLIENT_ID;
   const SLACK_CLIENT_SECRET = process.env.SLACK_CLIENT_SECRET;
@@ -13,7 +13,7 @@ module.exports = (() => {
   const SESSION_SECRET = process.env.SESSION_SECRET;
 
   return {
-    NODE_ENV,
+    LOG_LEVEL,
     PORT,
     SLACK_CLIENT_ID,
     SLACK_CLIENT_SECRET,
