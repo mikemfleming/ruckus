@@ -14,8 +14,7 @@ exports.add = (track) => {
 
   };
   const callback = (err, response, body) => {
-    if (err) return console.log('error ', err);
-    console.log('body: ', body);
+    if (err || body.error) return console.log('error ', body.error);
 
     const options = {
       method: 'POST',
@@ -31,8 +30,7 @@ exports.add = (track) => {
 
     request.post(options, (err, response, body) => {
       if (err) return console.log('error ', err);
-      console.log('inner response', response);
-      console.log('inner body', body);
+      console.log('sent response to slack');
     });
   };
 
