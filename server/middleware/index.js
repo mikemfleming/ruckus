@@ -26,6 +26,7 @@ exports.challenge = (req, res, next) => {
     console.log('it is a challenge request');
     res.set('Content-Type', 'text/plain');
     res.status(200).send(req.body.challenge);
+  } else {
+    next();
   }
-  next();
 };
