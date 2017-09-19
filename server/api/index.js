@@ -1,13 +1,13 @@
 'use strict';
 
 const router = require('express').Router();
-const apiUtil = require('../helpers/api.util');
-const slackUtil = require('../helpers/slack.util');
+const middleware = require('../middleware');
 
 // API specific middleware
-router.use(apiUtil.isAuthorized);
-router.use(slackUtil.challenge);
+router.use(middleware.isAuthorized);
+router.use(middleware.challenge);
 
 router.use('/spotify', require('./spotify'));
+router.use('/bot', require('./bot'));
 
 module.exports = router;
