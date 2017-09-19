@@ -8,7 +8,6 @@ router.use(middleware.spy);
 router.use(middleware.isAuthorized);
 router.use(middleware.challenge);
 
-router.use('/spotify', require('./spotify'));
 router.use('/bot', require('./bot'));
 
 module.exports = router;

@@ -1,6 +1,6 @@
 'use strict';
 
-const tracks = require('../spotify/tracks.controller');
+const tracks = require('../../models/spotify');
 
 module.exports = (req, res) => {
   const messageText = req.body.event.text;
