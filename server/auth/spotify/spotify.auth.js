@@ -15,7 +15,7 @@ exports.login = function(req, res) {
   res.cookie(stateKey, state);
 
   // request authorization from spotify
-  const scope = 'user-read-private user-read-email';
+  const scope = 'playlist-modify-public';
   res.redirect('https://accounts.spotify.com/authorize?' +
       querystring.stringify({
         response_type: 'code',
@@ -67,9 +67,8 @@ exports.callback = function(req, res) {
 
         // use the access token to access the Spotify Web API
         request.get(options, function(error, response, body) {
-          console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!! USER AUTHED IN');
-          console.log(JSON.stringify(body, null, 4));
-          console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!! USER AUTHED IN');
+          process.env.mike = access_token;
+          console.log('got spotify access token: ', access_token);
         });
 
         // we can also pass the token to the browser to make requests from there
