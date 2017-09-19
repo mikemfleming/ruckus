@@ -3,7 +3,7 @@
 // dependencies
 const config = require('../../config/main.config');
 
-exports.spy = function(req, res, next) {
+exports.spy = (req, res, next) => {
   if (config.LOG_LEVEL === 'debug') console.log(req.body);
   next();
 };
