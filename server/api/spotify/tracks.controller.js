@@ -2,6 +2,8 @@
 
 const request = require('request');
 
+const config = require('../../../config/main.config');
+
 exports.add = (track) => {
   console.log('add track: ', track);
 
@@ -13,8 +15,25 @@ exports.add = (track) => {
   };
   const callback = (err, response, body) => {
     if (err) return console.log('error ', err);
-    console.log('~~~ response');
-    console.log('$$$$ body', body);
+    console.log('body: ', body);
+
+    const options = {
+      method: 'POST',
+      uri: 'https://slack.com/api/chat.postMessage',
+      form: {
+        token: config.SLACK_BOT_TOKEN,
+        channel: 'C6U6X16TU',
+        text: 'Bork! Ruff.',
+        as_user: false,
+        username: 'spotdawg'
+      }
+    };
+
+    request.post(options, (err, response, body) => {
+      if (err) return console.log('error ', err);
+      console.log('inner response', response);
+      console.log('inner body', body);
+    });
   };
 
   request.post(options, callback);
