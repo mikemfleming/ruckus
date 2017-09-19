@@ -4,6 +4,7 @@ const router = require('express').Router();
 const apiUtil = require('../helpers/api.util');
 const slackUtil = require('../helpers/slack.util');
 
+// API specific middleware
 router.use(apiUtil.isAuthorized);
 router.use(slackUtil.challenge);
 

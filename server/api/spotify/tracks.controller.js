@@ -2,5 +2,5 @@
 
 exports.add = (req, res) => {
   console.log('made it to ADD', req.body);
-  res.sendStatus(200)
+  res.end()
 };
