@@ -3,14 +3,12 @@
 module.exports = (req, res) => {
   // figure out what the message says
   const message = req.body.event.text;
-  const spotifyTrack = /https:\/\/open.spotify.com\/track\//.test(message)
-  console.log(message)
+  const spotifyTrack = /https:\/\/open.spotify.com\/track\/(.{22})>?/.exec(message);
   // if it contains some kind of trigger
   if (spotifyTrack) {
-    const trackId = /https:\/\/open.spotify.com\/track\/(.*)>/.exec(message)[1];
-    console.log('spotify share', trackId)
+    console.log('spotify share', spotifyTrack[1]);
   } else {
-    console.log('random message', message)
+    console.log('random message', message);
   }
   res.end();
 };
