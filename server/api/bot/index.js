@@ -2,7 +2,7 @@
 
 module.exports = (req, res) => {
   // figure out what the message says
-  const message = req.body.event;
+  const message = req.body.event.text;
 
   console.log(`message ${message}`);
   res.end();
