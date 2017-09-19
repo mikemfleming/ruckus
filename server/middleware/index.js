@@ -21,7 +21,7 @@ exports.spy = function(req, res, next) {
 
 exports.isAuthorized = (req, res, next) => {
   console.log('checking authorization');
-  console.log(req.body)
+  console.log(JSON.stringify(req.body, null, 4));
   // this is where we confirm this request came from slack
   if (req.body.token !== config.SLACK_VERIFICATION_TOKEN) {
     console.log('not authorized')
