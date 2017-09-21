@@ -122,7 +122,7 @@
 
       document.getElementById('obtain-new-token').addEventListener('click', function() {
         $.ajax({
-          url: '/refresh_token',
+          url: '/auth/spotify/refresh_token',
           data: {
             'refresh_token': refresh_token
           }

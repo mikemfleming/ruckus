@@ -88,6 +88,7 @@ exports.callback = function(req, res) {
 };
 
 exports.refreshToken = function(req, res) {
+  console.log('refresh tokening')
   // requesting access token from refresh token
   var refresh_token = req.query.refresh_token;
   var authOptions = {
