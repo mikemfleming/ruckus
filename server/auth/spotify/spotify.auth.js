@@ -67,7 +67,7 @@ exports.callback = function(req, res) {
 
         // use the access token to access the Spotify Web API
         request.get(options, function(error, response, body) {
-          process.env.mike = access_token;
+          process.env.mike = access_token; // this is garbage code
           console.log('got spotify access token: ', access_token);
         });
 
