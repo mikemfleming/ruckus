@@ -23,6 +23,7 @@
 // - use mongoose for schema validation
 
 // # BUGS 'N' STUFF
+// - look into handling errors in middleware
 // - middleware is called multiple times per request
 //   - posibly because slack "unfolds" links like spotify links to be mini-players
 // - clean up views/public
