@@ -5,8 +5,8 @@ const middleware = require('../middleware');
 
 // API specific middleware
 router.use(middleware.spy);
+router.use(middleware.filter);
 router.use(middleware.isAuthorized);
-router.use(middleware.challenge);
 
 router.use('/bot', require('./bot'));
 

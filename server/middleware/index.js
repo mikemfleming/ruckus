@@ -10,6 +10,7 @@ exports.spy = (req, res, next) => {
 
 exports.isAuthorized = (req, res, next) => {
   console.log('checking authorization');
+
   // this is where we confirm this request came from slack
   if (req.body.token !== config.SLACK_VERIFICATION_TOKEN) {
     console.log('not authorized');
@@ -19,17 +20,20 @@ exports.isAuthorized = (req, res, next) => {
   }
 };
 
-exports.challenge = (req, res, next) => {
-  console.log('checking if its a challenge request');
-  if (req.body.type === 'url_verification') {
-    console.log('it is a challenge request');
+exports.handleError = (err, req, res, next) => {
+  res.status(500).send({ error: err });
+};
+
+exports.filter = (req, res, next) => {
+  const isUserGenerated = !!req.body.event.user;
+  const isChallengeRequest = req.body.type === 'url_verification';
+
+  if (isUserGenerated) {
+    next();
+  } else if (isChallengeRequest) {
     res.set('Content-Type', 'text/plain');
     res.status(200).send(req.body.challenge);
   } else {
-    next();
+    res.end();
   }
-};
-
-exports.handleError = (err, req, res, next) => {
-  res.status(500).send({ error: err });
 };
