@@ -24,6 +24,9 @@ exports.listen = function(port) {
   app.use('/auth', auth);
   app.use('/api', api);
 
+  // error handling
+  app.use(middleware.handleError);
+
   app.listen(port, function() {
     console.log(`Spot Dawg is on port ${port}!`);
   });

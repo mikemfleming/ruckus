@@ -13,8 +13,7 @@ exports.isAuthorized = (req, res, next) => {
   // this is where we confirm this request came from slack
   if (req.body.token !== config.SLACK_VERIFICATION_TOKEN) {
     console.log('not authorized');
-    res.status(403).send('Required: Slack Verification Token\n');
-    res.end();
+    next('Required: Slack Verification Token\n');
   } else {
     next();
   }
@@ -29,4 +28,8 @@ exports.challenge = (req, res, next) => {
   } else {
     next();
   }
+};
+
+exports.handleError = (err, req, res, next) => {
+  res.status(500).send({ error: err });
 };
