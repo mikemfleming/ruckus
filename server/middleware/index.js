@@ -20,6 +20,13 @@ exports.isAuthorized = (req, res, next) => {
   }
 };
 
+exports.isLoggedIn = (req, res, next) => {
+  if (req.isAuthenticated()) {
+    return next();
+  }
+  res.redirect('/');
+};
+
 exports.handleError = (err, req, res, next) => {
   res.status(500).send({ error: err });
 };

@@ -1,8 +1,8 @@
 'use strict';
 
 const router = require('express').Router();
-const middleware = require('../middleware');
 
+router.use('/app', require('./app'));
 router.use('/spotify', require('./spotify'));
 
 module.exports = router;
