@@ -21,7 +21,7 @@ module.exports = (passport) => {
       User.findOne({ 'local.email': email }, (err, user) => {
         if (err) return done(err);
 
-        if (!user) {
+        if (user) {
           return done(null, false, req.flash('signupMessage', 'That email is already taken.'));
         } else {
           const newUser = new User();

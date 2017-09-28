@@ -24,7 +24,7 @@ exports.listen = function(port) {
   require('../config/passport.js')(passport);
 
   // middleware
-  app.use(bodyParser.json());
+  app.use(bodyParser());
   app.use(cookieParser());
   app.use(morgan('dev'));
 
