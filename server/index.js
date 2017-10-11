@@ -35,7 +35,7 @@ exports.listen = function(port) {
   app.use(passport.session());
   app.use(flash());
 
-  app.get('/', (req, res) => res.render('index.ejs'));
+  app.get('/', (req, res) => res.render('index.ejs')); // is this the best place for this? probably not.
 
   // API routes
   app.use('/auth', auth);

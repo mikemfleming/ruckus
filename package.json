@@ -22,6 +22,7 @@
     "nodemon": "^1.11.0",
     "passport": "^0.4.0",
     "passport-local": "^1.0.0",
+    "passport-slack": "0.0.7",
     "querystring": "^0.2.0",
     "request": "^2.81.0"
   }

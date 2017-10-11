@@ -12,8 +12,8 @@ const passportOptions = {
 
 router.get('/login', appAuth.login);
 router.get('/signup', appAuth.signup);
-router.post('/signup', passport.authenticate('local-signup', passportOptions)); // pretty sure there is an issue with the order in which passport is configured...
+router.post('/signup', passport.authenticate('local-signup', passportOptions));
 router.get('/profile', appAuth.profile);
-router.get('logout', appAuth.logout);
+router.get('/logout', appAuth.logout);
 
 module.exports = router;
