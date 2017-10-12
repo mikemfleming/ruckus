@@ -3,29 +3,43 @@
 // required dependencies
 const express = require('express');
 const app = express();
-const routes = express.Router();
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
+const flash = require('connect-flash');
+const morgan = require('morgan');
+const session = require('express-session');
+const passport = require('passport');
+const mongoose = require('mongoose');
 
 // required files
 const middleware = require('./middleware');
 const auth = require('./auth');
 const api = require('./api');
+const config = require('../config/main.config');
 
 exports.listen = function(port) {
+  // connect to db
+  mongoose.connect(config.MONGO_URL);
+
+  require('../config/passport.js')(passport);
+
   // middleware
-  app.use(bodyParser.json());
+  app.use(bodyParser());
   app.use(cookieParser());
+  app.use(morgan('dev'));
 
-  // serve static assets
-  app.use(express.static(__dirname + '/../public'));
+  // authentication and templating
+  app.set('view engine', 'ejs');
+  app.use(session({ secret: process.env.SESSION_SECRET }));
+  app.use(passport.initialize());
+  app.use(passport.session());
+  app.use(flash());
 
-  // set up routes
+  app.get('/', (req, res) => res.render('index.ejs')); // is this the best place for this? probably not.
+
+  // API routes
   app.use('/auth', auth);
   app.use('/api', api);
-
-  // error handling
-  app.use(middleware.handleError);
 
   app.listen(port, function() {
     console.log(`Spot Dawg is on port ${port}!`);

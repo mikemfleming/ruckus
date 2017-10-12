@@ -4,6 +4,8 @@
 // - user adds spotdawg to channel
 // - user (or spotdawg?) initiates conversation, directs user to something like "/signup"
 // - user makes an account using Slack-Passport (SD keeps username, pw, slack team id, etc)
+//   - only slack oauth accounts are allowed since all users must be slack users by default.
+//   - if so, how to reconcile one user with many slack accounts? local first, authorize slack, then authorize spotify for that slack?
 // - on success, directs user to Spotify's OAUTH flow (add Spotify account info to the user's record)
 
 // # BOT API
@@ -19,13 +21,13 @@
 // - is middleware appropriate for respond to challenge requests?
 
 // # DATABASE
-// - make the database (lol), probably with mlab
-// - use mongoose for schema validation
+// X make the database with mlab
+// - one SD user with many teams
 
 // # BUGS 'N' STUFF
 // - look into handling errors in middleware
-// - middleware is called multiple times per request
-//   - posibly because slack "unfolds" links like spotify links to be mini-players
+// X middleware is called multiple times per request
+//   X posibly because slack "unfolds" links like spotify links to be mini-players
 // - clean up views/public
 
 // # USER STORY:
@@ -42,8 +44,8 @@
 //     - sends individual errors ('could not add track XXX')
 
 // # IDEAS
-// - is a kanban board overkill for a project with only one person?
 // - CLI-esque search and play in chat (update spotify scope)
+// - supports admin roles
 // - supports multiple playlists
 //   - CLI-esque playlist management in chat (upgrade dat bot chat)
 // - IBM's Watson API could analyze the lyrics of songs for emotional tone, giving the channel a rating

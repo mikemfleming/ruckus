@@ -8,6 +8,12 @@ const redirect_uri = process.env.SPOTIFY_REDIRECT_URI;
 const client_id = process.env.SPOTIFY_CLIENT_ID;
 const client_secret = process.env.SPOTIFY_CLIENT_SECRET;
 
+//const {
+//  SPOTIFY_REDIRECT_URI: redirect_uri,
+//    SPOTIFY_CLIENT_ID: client_id,
+//    SPOTIFY_CLIENT_SECRET: client_secret
+//} = process.env;
+
 const stateKey = 'spotify_auth_state';
 
 exports.login = function(req, res) {
@@ -53,6 +59,7 @@ exports.callback = function(req, res) {
       json: true
     };
 
+    // closures are expensive, avoid!
     request.post(authOptions, function(error, response, body) {
       if (!error && response.statusCode === 200) {
 
@@ -90,6 +97,7 @@ exports.callback = function(req, res) {
 exports.refreshToken = function(req, res) {
   console.log('refresh tokening')
   // requesting access token from refresh token
+  // don't use var anymore
   var refresh_token = req.query.refresh_token;
   var authOptions = {
     url: 'https://accounts.spotify.com/api/token',
