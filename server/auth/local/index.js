@@ -2,7 +2,7 @@
 
 const router = require('express').Router();
 const passport = require('passport');
-const appAuth = require('./local.auth');
+const localAuth = require('./local.auth');
 
 const passportOptions = {
   successRedirect : '/auth/local/profile',
@@ -10,13 +10,13 @@ const passportOptions = {
   failureFlash : true,
 };
 
-router.get('/login', appAuth.login);
+router.get('/login', localAuth.login);
 router.post('/login', passport.authenticate('local-login', passportOptions));
 
-router.get('/signup', appAuth.signup);
+router.get('/signup', localAuth.signup);
 router.post('/signup', passport.authenticate('local-signup', passportOptions));
 
-router.get('/profile', appAuth.profile);
-router.get('/logout', appAuth.logout);
+router.get('/profile', localAuth.profile);
+router.get('/logout', localAuth.logout);
 
 module.exports = router;
