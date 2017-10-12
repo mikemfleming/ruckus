@@ -2,11 +2,11 @@
 
 const router = require('express').Router();
 const passport = require('passport');
-const appAuth = require('./app.auth');
+const appAuth = require('./local.auth');
 
 const passportOptions = {
-  successRedirect : '/auth/app/profile',
-  failureRedirect : '/auth/app/signup',
+  successRedirect : '/auth/local/profile',
+  failureRedirect : '/auth/local/signup',
   failureFlash : true,
 };
 
