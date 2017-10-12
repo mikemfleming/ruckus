@@ -14,7 +14,7 @@ module.exports = (passport) => {
     });
   });
 
-  const localCallback = (req, email, password, done) => {
+  const localSignupCallback = (req, email, password, done) => {
     process.nextTick(() => {
       User.findOne({ 'local.email': email }, (err, user) => {
         if (err) return done(err);
@@ -33,5 +33,19 @@ module.exports = (passport) => {
     });
   };
 
-  passport.use('local-signup', new LocalStrategy({ usernameField: 'email', passReqToCallback: true }, localCallback));
+  passport.use('local-signup', new LocalStrategy({ usernameField: 'email', passReqToCallback: true }, localSignupCallback));
+
+  const localLoginCallback = (req, email, password, done) => {
+    User.findOne({ 'local.email': email }, (err, user) => {
+      if (err) return done(err);
+      if (!user) return done(null, false, req.flash('loginMessage', 'No user found.'));
+      return done(null, user);
+    });
+  };
+
+  passport.use('local-login', new LocalStrategy({
+    usernameField: 'email',
+    passwordField: 'password',
+    passReqToCallback: true
+  }, localLoginCallback));
 };
