@@ -2,7 +2,8 @@
 
 const passport = require('passport');
 
-const localAuth= require('./auth/local.auth');
+const localAuth = require('./auth/local.auth');
+const middleware = require('./middleware');
 
 module.exports = function (app) {
 
@@ -20,6 +21,10 @@ module.exports = function (app) {
 	app.get('/signup', localAuth.signup);
 	app.post('/signup', passport.authenticate('local-signup', passportOptions));
 
-	app.get('/profile', localAuth.profile);
+	app.get('/profile', middleware.isLoggedIn, localAuth.profile);
 	app.get('/logout', localAuth.logout);
+
+	app.get('/authorize', middleware.isLoggedIn, localAuth.authorize);
+	// /authorize/slack
+	// /authorize/slack/callback
 };
