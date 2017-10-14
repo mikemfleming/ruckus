@@ -18,5 +18,6 @@ exports.logout = (req, res) => {
 };
 
 exports.authorize = (req, res) => {
+	console.log(req.session)
 	res.render('authorize.ejs');
 };

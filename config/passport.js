@@ -14,7 +14,7 @@ module.exports = (passport) => {
   passport.use('local-signup', new LocalStrategy({ usernameField: 'email', passReqToCallback: true }, localSignupCallback));
   passport.use('local-login', new LocalStrategy({ usernameField: 'email', passReqToCallback: true }, localLoginCallback));
 
-  passport.use('slack', new SlackStrategy({ clientID: config.SLACK_CLIENT_ID, clientSecret: config.SLACK_CLIENT_SECRET }, slackCallback));
+  // passport.use('slack', new SlackStrategy({ clientID: config.SLACK_CLIENT_ID, clientSecret: config.SLACK_CLIENT_SECRET }, slackCallback));
 
   function serializeUser (user, done) {
     done(null, user.id);
@@ -48,9 +48,9 @@ module.exports = (passport) => {
     });
   };
 
-  function slackCallback (accessToken, refreshToken, profile, done) {
-    // now we gotta do something with this team id
-    console.log(profile.team)
-    done(null, profile);
-  }
+  // function slackCallback (accessToken, refreshToken, profile, done) {
+  //   // get current user id and save profile.team to it
+  //   // console.log(profile.team)
+  //   done(null, profile);
+  // }
 };

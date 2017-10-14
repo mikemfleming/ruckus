@@ -26,6 +26,6 @@ module.exports = function (app) {
 	app.get('/logout', localAuth.logout);
 
 	app.get('/authorize', middleware.isLoggedIn, localAuth.authorize);
-	app.get('/authorize/slack', passport.authorize('slack'));
-	app.get('/authorize/slack/callback', passport.authorize('slack', { failureRedirect: '/login' }), slackAuth.callback);
+	app.get('/authorize/slack', middleware.isLoggedIn, slackAuth.authorize);
+	app.get('/authorize/slack/callback', middleware.isLoggedIn, slackAuth.callback);
 };
