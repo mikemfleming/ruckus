@@ -15,6 +15,9 @@ const mongoose = require('mongoose');
 const api = require('./api');
 const config = require('../config/main.config');
 
+// configure mongoose promises
+mongoose.promise = Promise;
+
 exports.listen = function(port) {
   // connect to db
   mongoose.connect(config.MONGO_URL);

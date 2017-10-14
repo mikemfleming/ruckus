@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.16.2",
     "bcrypt": "^1.0.3",
     "body-parser": "^1.17.2",
     "connect-flash": "^0.1.1",

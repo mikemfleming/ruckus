@@ -4,18 +4,17 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 
 const userSchema = mongoose.Schema({
-  local: {
-    email: String,
+    username: String,
     password: String,
-  },
+    slackTeams: Array,
 });
 
 userSchema.methods.generateHash = (password) => {
-  return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
+    return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
 };
 
 userSchema.methods.validPassword = (password) => {
-  return bcrypt.compareSync(password, this.local.password);
+    return bcrypt.compareSync(password, this.password);
 };
 
 module.exports = mongoose.model('User', userSchema);
