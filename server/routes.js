@@ -4,8 +4,10 @@ const passport = require('passport');
 
 const localAuth = require('./auth/local.auth');
 const slackAuth = require('./auth/slack.auth');
+const spotifyAuth = require('./auth/spotify.auth');
 const middleware = require('./middleware');
 
+// #addToConfig
 module.exports = function (app) {
 
 	const passportOptions = {
@@ -28,4 +30,7 @@ module.exports = function (app) {
 	app.get('/authorize', middleware.isLoggedIn, localAuth.authorize);
 	app.get('/authorize/slack', middleware.isLoggedIn, slackAuth.authorize);
 	app.get('/authorize/slack/callback', middleware.isLoggedIn, slackAuth.callback);
+
+	app.get('/authorize/spotify', middleware.isLoggedIn, spotifyAuth.authorize);
+	app.get('/authorize/spotify/callback', middleware.isLoggedIn, spotifyAuth.callback);
 };

@@ -7,6 +7,8 @@ const userSchema = mongoose.Schema({
     username: String,
     password: String,
     slackTeams: Array,
+    spotifyAccessToken: String,
+    spotifyRefreshToken: String,
 });
 
 userSchema.methods.generateHash = (password) => {

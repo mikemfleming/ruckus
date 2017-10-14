@@ -13,12 +13,12 @@ exports.authorize = (req, res) => {
     const state = authUtil.generateRandomString(16);
     const query = querystring.stringify({
       client_id: config.SLACK_CLIENT_ID,
-      redirect_uri: 'http://localhost:8888/authorize/slack/callback', // add SLACK_REDIRECT_URI to .env
-      scope: 'identity.basic', // add SLACK_SCOPE to .env
+      redirect_uri: 'http://localhost:8888/authorize/slack/callback', // #addToConfig
+      scope: 'identity.basic', // #addToConfig
       state: state,
     });
 
-    res.cookie(stateKey, state);
+    res.cookie(stateKey, state); // #addToConfig
 
     res.redirect(`https://slack.com/oauth/authorize?${query}`);
 };
@@ -33,16 +33,18 @@ exports.callback = (req, res) => {
         res.clearCookie(stateKey);
 
         const params = {
-            client_id: config.SLACK_CLIENT_ID,
+            client_id: config.SLACK_CLIENT_ID, // #addToConfig
             client_secret: config.SLACK_CLIENT_SECRET,
             code,
-            redirect_uri: 'http://localhost:8888/authorize/slack/callback',
+            redirect_uri: 'http://localhost:8888/authorize/slack/callback', // #addToConfig
         };
 
         axios.get('https://slack.com/api/oauth.access', { params })
             .then(saveTeamToUser)
-            .catch(error => console.log('error in slack oauth callback'));
+            .then(() => res.redirect('/profile')) // urls should be config
+            .catch(error => console.log('error in slack oauth callback', error));
 
+        // this needs to be somewhere else
         function saveTeamToUser (res) {
             const team = res.data ? res.data.team : null;
             if (!team) throw new Error('Team id not present in Slack response.');
@@ -50,8 +52,11 @@ exports.callback = (req, res) => {
 
             User.findById(currentUser)
                 .then(user => {
-                    user.slackTeams.push(team);
-                    user.save();
+                    const isUnique = user.slackTeams.includes(team);
+                    if (!isUnique) {
+                        user.slackTeams.push(team);
+                        user.save();
+                    }
                 })
                 .catch(error => console.log('error updating user', error));
         }
