@@ -1,15 +1,20 @@
 'use strict';
 
 const LocalStrategy = require('passport-local');
+const SlackStrategy = require('passport-slack').Strategy;
 
 const User = require('../server/models/users');
+const config = require('./main.config');
 
 module.exports = (passport) => {
 
   passport.serializeUser(serializeUser);
   passport.deserializeUser(deserializeUser);
+
   passport.use('local-signup', new LocalStrategy({ usernameField: 'email', passReqToCallback: true }, localSignupCallback));
   passport.use('local-login', new LocalStrategy({ usernameField: 'email', passReqToCallback: true }, localLoginCallback));
+
+  passport.use('slack', new SlackStrategy({ clientID: config.SLACK_CLIENT_ID, clientSecret: config.SLACK_CLIENT_SECRET }, slackCallback));
 
   function serializeUser (user, done) {
     done(null, user.id);
@@ -42,4 +47,9 @@ module.exports = (passport) => {
       return done(null, user);
     });
   };
+
+  function slackCallback (accessToken, refreshToken, profile, done) {
+    // optionally persist profile data
+    done(null, profile);
+  }
 };
