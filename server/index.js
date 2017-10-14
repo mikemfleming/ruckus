@@ -12,10 +12,11 @@ const passport = require('passport');
 const mongoose = require('mongoose');
 
 // required files
-const middleware = require('./middleware');
-const auth = require('./auth');
 const api = require('./api');
 const config = require('../config/main.config');
+
+// configure mongoose promises
+mongoose.promise = Promise;
 
 exports.listen = function(port) {
   // connect to db
@@ -28,17 +29,17 @@ exports.listen = function(port) {
   app.use(cookieParser());
   app.use(morgan('dev'));
 
-  // authentication and templating
+  // set up passport auth and ejs templating
   app.set('view engine', 'ejs');
   app.use(session({ secret: process.env.SESSION_SECRET }));
   app.use(passport.initialize());
   app.use(passport.session());
   app.use(flash());
 
-  app.get('/', (req, res) => res.render('index.ejs')); // is this the best place for this? probably not.
+  // configure routes
+  require('./routes')(app);
 
   // API routes
-  app.use('/auth', auth);
   app.use('/api', api);
 
   app.listen(port, function() {

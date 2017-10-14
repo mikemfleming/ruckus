@@ -1,15 +1,18 @@
 'use strict';
 
 const LocalStrategy = require('passport-local');
+const SlackStrategy = require('passport-slack').Strategy;
 
 const User = require('../server/models/users');
+const config = require('./main.config');
 
 module.exports = (passport) => {
 
   passport.serializeUser(serializeUser);
   passport.deserializeUser(deserializeUser);
-  passport.use('local-signup', new LocalStrategy({ usernameField: 'email', passReqToCallback: true }, localSignupCallback));
-  passport.use('local-login', new LocalStrategy({ usernameField: 'email', passReqToCallback: true }, localLoginCallback));
+
+  passport.use('local-signup', new LocalStrategy({ usernameField: 'username', passReqToCallback: true }, localSignupCallback));
+  passport.use('local-login', new LocalStrategy({ usernameField: 'username', passReqToCallback: true }, localLoginCallback));
 
   function serializeUser (user, done) {
     done(null, user.id);
@@ -19,14 +22,14 @@ module.exports = (passport) => {
     User.findById(id, (err, user) => done(err, user));
   }
 
-  function localSignupCallback (req, email, password, done) {
+  function localSignupCallback (req, username, password, done) {
     process.nextTick(() => {
-      User.findOne({ 'local.email': email }, (err, user) => {
+      User.findOne({ 'username': username }, (err, user) => {
         if (err) return done(err);
-        if (user) return done(null, false, req.flash('signupMessage', 'That email is already taken.'));
+        if (user) return done(null, false, req.flash('signupMessage', 'That username is already taken.'));
         const newUser = new User();
-        newUser.local.email = email;
-        newUser.local.password = newUser.generateHash(password);
+        newUser.username = username;
+        newUser.password = newUser.generateHash(password);
         newUser.save((err) => {
           if (err) throw err;
           return done(null, newUser);
@@ -35,8 +38,8 @@ module.exports = (passport) => {
     });
   };
 
-  function localLoginCallback (req, email, password, done) {
-    User.findOne({ 'local.email': email }, (err, user) => {
+  function localLoginCallback (req, username, password, done) {
+    User.findOne({ username: username }, (err, user) => {
       if (err) return done(err);
       if (!user) return done(null, false, req.flash('loginMessage', 'No user found.'));
       return done(null, user);

@@ -16,3 +16,7 @@ exports.logout = (req, res) => {
   req.logout();
   res.redirect('/');
 };
+
+exports.authorize = (req, res) => {
+	res.render('authorize.ejs');
+};
