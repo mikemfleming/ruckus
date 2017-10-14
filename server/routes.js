@@ -3,6 +3,7 @@
 const passport = require('passport');
 
 const localAuth = require('./auth/local.auth');
+const slackAuth = require('./auth/slack.auth');
 const middleware = require('./middleware');
 
 module.exports = function (app) {
@@ -25,11 +26,6 @@ module.exports = function (app) {
 	app.get('/logout', localAuth.logout);
 
 	app.get('/authorize', middleware.isLoggedIn, localAuth.authorize);
-	// /authorize/slack
 	app.get('/authorize/slack', passport.authorize('slack'));
-	// /authorize/slack/callback
-	app.get('/auth/slack/callback',
-	  passport.authorize('slack', { failureRedirect: '/login' }),
-	  (req, res) => res.redirect('/')
-	);
+	app.get('/authorize/slack/callback', passport.authorize('slack', { failureRedirect: '/login' }), slackAuth.callback);
 };
