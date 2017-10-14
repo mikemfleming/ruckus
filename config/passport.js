@@ -49,7 +49,8 @@ module.exports = (passport) => {
   };
 
   function slackCallback (accessToken, refreshToken, profile, done) {
-    // optionally persist profile data
+    // now we gotta do something with this team id
+    console.log(profile.team)
     done(null, profile);
   }
 };
