@@ -1,7 +1,17 @@
 'use strict';
 
 module.exports = (() => {
-  const LOG_LEVEL = process.env.LOG_LEVEL || 'development';
+  const {
+    SLACK_CLIENT_ID,
+    SLACK_CLIENT_SECRET,
+    SLACK_VERIFICATION_TOKEN,
+    SLACK_BOT_TOKEN,
+    SPOTIFY_CLIENT_ID,
+    SPOTIFY_CLIENT_SECRET,
+    ENVIRONMENT
+  } = process.env;
+
+  const LOG_LEVEL = ENVIRONMENT === 'development' ? 'dev' : 'common';
   const PORT = process.env.PORT || 8888;
 
   const LOGIN_URL = '/login';
@@ -9,7 +19,7 @@ module.exports = (() => {
   const PROFILE_URL = '/profile';
   const LOGOUT_URL = '/logout';
 
-  const SESSION_SECRET = LOG_LEVEL === 'development'
+  const SESSION_SECRET = ENVIRONMENT === 'development'
     ? process.env.SESSION_SECRET_DEV
     : process.env.SESSION_SECRET_PROD;
 
@@ -19,31 +29,29 @@ module.exports = (() => {
   const AUTHORIZE_SPOTIFY_ROOT_URL = '/authorize/spotify';
   const AUTHORIZE_SPOTIFY_CALLBACK_URL = '/authorize/spotify/callback';
 
-  const SPOTIFY_REDIRECT_URI = LOG_LEVEL === 'development'
+  const SPOTIFY_REDIRECT_URI = ENVIRONMENT === 'development'
     ? `http://localhost:${PORT + AUTHORIZE_SPOTIFY_CALLBACK_URL}`
     : `SPOTIFY PRODUCTION CALLBACK URL NOT SET`;
 
-  const SLACK_REDIRECT_URI = LOG_LEVEL === 'development'
+  const SLACK_REDIRECT_URI = ENVIRONMENT === 'development'
     ? `http://localhost:${PORT + AUTHORIZE_SLACK_CALLBACK_URL}`
     : `SLACK PRODUCTION CALLBACK URL NOT SET`;
 
   const SLACK_SCOPE = 'identity.basic';
   const SPOTIFY_SCOPE = 'playlist-modify-public';
 
-  const MONGO_URL = LOG_LEVEL === 'development'
+  const MONGO_URL = ENVIRONMENT === 'development'
     ? process.env.MONGO_DEV_URL
     : process.env.MONGO_PROD_URL;
 
-  const {
+  return {
     SLACK_CLIENT_ID,
     SLACK_CLIENT_SECRET,
     SLACK_VERIFICATION_TOKEN,
     SLACK_BOT_TOKEN,
     SPOTIFY_CLIENT_ID,
-    SPOTIFY_CLIENT_SECRET
-  } = process.env;
+    SPOTIFY_CLIENT_SECRET,
 
-  return {
     LOG_LEVEL,
     PORT,
 
@@ -67,12 +75,5 @@ module.exports = (() => {
     SPOTIFY_SCOPE,
 
     MONGO_URL,
-
-    SLACK_CLIENT_ID,
-    SLACK_CLIENT_SECRET,
-    SLACK_VERIFICATION_TOKEN,
-    SLACK_BOT_TOKEN,
-    SPOTIFY_CLIENT_ID,
-    SPOTIFY_CLIENT_SECRET,
   };
 })();
