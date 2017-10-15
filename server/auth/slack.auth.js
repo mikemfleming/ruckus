@@ -13,8 +13,8 @@ exports.authorize = (req, res) => {
     const state = authUtil.generateRandomString(16);
     const query = querystring.stringify({
       client_id: config.SLACK_CLIENT_ID,
-      redirect_uri: 'http://localhost:8888/authorize/slack/callback', // #addToConfig
-      scope: 'identity.basic', // #addToConfig
+      redirect_uri: config.SLACK_REDIRECT_URI,
+      scope: config.SLACK_SCOPE,
       state: state,
     });
 
@@ -33,15 +33,15 @@ exports.callback = (req, res) => {
         res.clearCookie(stateKey);
 
         const params = {
-            client_id: config.SLACK_CLIENT_ID, // #addToConfig
+            client_id: config.SLACK_CLIENT_ID,
             client_secret: config.SLACK_CLIENT_SECRET,
             code,
-            redirect_uri: 'http://localhost:8888/authorize/slack/callback', // #addToConfig
+            redirect_uri: config.SLACK_REDIRECT_URI,
         };
 
         axios.get('https://slack.com/api/oauth.access', { params })
             .then(saveTeamToUser)
-            .then(() => res.redirect('/profile')) // urls should be config
+            .then(() => res.redirect(config.PROFILE_URL))
             .catch(error => console.log('error in slack oauth callback', error));
 
         // this needs to be somewhere else

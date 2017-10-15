@@ -31,7 +31,7 @@ exports.listen = function(port) {
 
   // set up passport auth and ejs templating
   app.set('view engine', 'ejs');
-  app.use(session({ secret: process.env.SESSION_SECRET }));
+  app.use(session({ secret: config.SESSION_SECRET }));
   app.use(passport.initialize());
   app.use(passport.session());
   app.use(flash());

@@ -8,12 +8,11 @@ const spotifyAuth = require('./auth/spotify.auth');
 const middleware = require('./middleware');
 const config = require('../config/main.config');
 
-// #addToConfig
 module.exports = function (app) {
 
 	const passportOptions = {
-	  successRedirect : '/profile',
-	  failureRedirect : '/signup',
+	  successRedirect : config.PROFILE_URL,
+	  failureRedirect : config.LOGOUT_URL,
 	  failureFlash : true,
 	};
 

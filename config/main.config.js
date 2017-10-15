@@ -20,8 +20,15 @@ module.exports = (() => {
     : process.env.SESSION_SECRET_PROD;
 
   const SPOTIFY_REDIRECT_URI = LOG_LEVEL === 'development'
-    ? `http://localhost:${PORT}/${AUTHORIZE_SPOTIFY_CALLBACK_URL}`
+    ? `http://localhost:${PORT + AUTHORIZE_SPOTIFY_CALLBACK_URL}`
     : `SPOTIFY PRODUCTION CALLBACK URL NOT SET`;
+
+  const SLACK_REDIRECT_URI = LOG_LEVEL === 'development'
+    ? `http://localhost:${PORT + AUTHORIZE_SLACK_CALLBACK_URL}`
+    : `SLACK PRODUCTION CALLBACK URL NOT SET`;
+
+  const SLACK_SCOPE = 'identity.basic';
+  const SPOTIFY_SCOPE = 'playlist-modify-public';
 
   const MONGO_URL = LOG_LEVEL === 'development'
     ? process.env.MONGO_DEV_URL
@@ -44,6 +51,9 @@ module.exports = (() => {
     SIGNUP_URL,
     PROFILE_URL,
     LOGOUT_URL,
+
+    SLACK_SCOPE,
+    SPOTIFY_SCOPE,
 
     AUTHORIZE_ROOT_URL,
     AUTHORIZE_SLACK_ROOT_URL,
