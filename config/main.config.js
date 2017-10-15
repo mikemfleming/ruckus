@@ -9,15 +9,15 @@ module.exports = (() => {
   const PROFILE_URL = '/profile';
   const LOGOUT_URL = '/logout';
 
+  const SESSION_SECRET = LOG_LEVEL === 'development'
+    ? process.env.SESSION_SECRET_DEV
+    : process.env.SESSION_SECRET_PROD;
+
   const AUTHORIZE_ROOT_URL = '/authorize';
   const AUTHORIZE_SLACK_ROOT_URL = '/authorize/slack';
   const AUTHORIZE_SLACK_CALLBACK_URL = '/authorize/slack/callback';
   const AUTHORIZE_SPOTIFY_ROOT_URL = '/authorize/spotify';
   const AUTHORIZE_SPOTIFY_CALLBACK_URL = '/authorize/spotify/callback';
-
-  const SESSION_SECRET = LOG_LEVEL === 'development'
-    ? process.env.SESSION_SECRET_DEV
-    : process.env.SESSION_SECRET_PROD;
 
   const SPOTIFY_REDIRECT_URI = LOG_LEVEL === 'development'
     ? `http://localhost:${PORT + AUTHORIZE_SPOTIFY_CALLBACK_URL}`
@@ -52,8 +52,7 @@ module.exports = (() => {
     PROFILE_URL,
     LOGOUT_URL,
 
-    SLACK_SCOPE,
-    SPOTIFY_SCOPE,
+    SESSION_SECRET,
 
     AUTHORIZE_ROOT_URL,
     AUTHORIZE_SLACK_ROOT_URL,
@@ -61,14 +60,19 @@ module.exports = (() => {
     AUTHORIZE_SPOTIFY_ROOT_URL,
     AUTHORIZE_SPOTIFY_CALLBACK_URL,
 
+    SPOTIFY_REDIRECT_URI,
+    SLACK_REDIRECT_URI,
+
+    SLACK_SCOPE,
+    SPOTIFY_SCOPE,
+
+    MONGO_URL,
+
     SLACK_CLIENT_ID,
     SLACK_CLIENT_SECRET,
     SLACK_VERIFICATION_TOKEN,
     SLACK_BOT_TOKEN,
     SPOTIFY_CLIENT_ID,
     SPOTIFY_CLIENT_SECRET,
-    SPOTIFY_REDIRECT_URI,
-    MONGO_URL,
-    SESSION_SECRET,
   };
 })();
