@@ -1,7 +1,7 @@
 'use strict';
 
 module.exports = (() => {
-  const LOG_LEVEL = process.env.LOG_LEVEL || 'production';
+  const LOG_LEVEL = process.env.LOG_LEVEL || 'development';
   const PORT = process.env.PORT || 8888;
 
   const LOGIN_URL = '/login';
@@ -15,19 +15,26 @@ module.exports = (() => {
   const AUTHORIZE_SPOTIFY_ROOT_URL = '/authorize/spotify';
   const AUTHORIZE_SPOTIFY_CALLBACK_URL = '/authorize/spotify/callback';
 
+  const SESSION_SECRET = LOG_LEVEL === 'development'
+    ? process.env.SESSION_SECRET_DEV
+    : process.env.SESSION_SECRET_PROD;
+
+  const SPOTIFY_REDIRECT_URI = LOG_LEVEL === 'development'
+    ? `http://localhost:${PORT}/${AUTHORIZE_SPOTIFY_CALLBACK_URL}`
+    : `SPOTIFY PRODUCTION CALLBACK URL NOT SET`;
+
+  const MONGO_URL = LOG_LEVEL === 'development'
+    ? process.env.MONGO_DEV_URL
+    : process.env.MONGO_PROD_URL;
+
   const {
     SLACK_CLIENT_ID,
     SLACK_CLIENT_SECRET,
     SLACK_VERIFICATION_TOKEN,
     SLACK_BOT_TOKEN,
     SPOTIFY_CLIENT_ID,
-    SPOTIFY_CLIENT_SECRET,
-    SPOTIFY_REDIRECT_URI,
-    MONGO_URL,
-    SESSION_SECRET
+    SPOTIFY_CLIENT_SECRET
   } = process.env;
-
-  console.log(process.env.MONGO_URL)
 
   return {
     LOG_LEVEL,
