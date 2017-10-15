@@ -15,12 +15,12 @@ exports.authorize = (req, res) => {
     const query = querystring.stringify({
         response_type: 'code',
         client_id: config.SPOTIFY_CLIENT_ID,
-        scope: 'playlist-modify-public',  // #addToConfig
-        redirect_uri: 'http://localhost:8888/authorize/spotify/callback', // #addToConfig
+        scope: config.SPOTIFY_SCOPE,
+        redirect_uri: config.SPOTIFY_REDIRECT_URI,
         state: state,
     });
 
-    res.cookie(stateKey, state); // #addToConfig
+    res.cookie(stateKey, state);
 
     // request authorization from spotify
     res.redirect(`https://accounts.spotify.com/authorize?${query}`);
@@ -39,11 +39,11 @@ exports.callback = (req, res) => {
             url: 'https://accounts.spotify.com/api/token',
             form: {
                 code: code,
-                redirect_uri: 'http://localhost:8888/authorize/spotify/callback', // #addToConfig
+                redirect_uri: config.SPOTIFY_REDIRECT_URI,
                 grant_type: 'authorization_code'
             },
             headers: {
-                'Authorization': 'Basic ' + (new Buffer(config.SPOTIFY_CLIENT_ID + ':' + config.SPOTIFY_CLIENT_SECRET).toString('base64')) // #addToConfig
+                'Authorization': 'Basic ' + (new Buffer(config.SPOTIFY_CLIENT_ID + ':' + config.SPOTIFY_CLIENT_SECRET).toString('base64'))
             },
             json: true
         };
@@ -71,7 +71,7 @@ exports.callback = (req, res) => {
                             user.spotifyRefreshToken = refresh_token;
                             user.save();
                         })
-                        .then(() => res.redirect('/profile'))
+                        .then(() => res.redirect(config.PROFILE_URL))
                         .catch(error => console.log('error updating user spotify info', error))
                 });
             } else {
@@ -92,7 +92,7 @@ exports.refreshToken = function(req, res) {
     var refresh_token = req.query.refresh_token;
     var authOptions = {
         url: 'https://accounts.spotify.com/api/token',
-        headers: { 'Authorization': 'Basic ' + (new Buffer(client_id + ':' + client_secret).toString('base64')) }, // #addToConfig
+        headers: { 'Authorization': 'Basic ' + (new Buffer(config.SPOTIFY_CLIENT_ID + ':' + config.SPOTIFY_CLIENT_SECRET).toString('base64')) }, // #addToConfig
         form: {
             grant_type: 'refresh_token',
             refresh_token: refresh_token
