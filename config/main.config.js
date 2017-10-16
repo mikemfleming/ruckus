@@ -8,11 +8,16 @@ module.exports = (() => {
     SLACK_BOT_TOKEN,
     SPOTIFY_CLIENT_ID,
     SPOTIFY_CLIENT_SECRET,
-    ENVIRONMENT
+    ENVIRONMENT,
+    SESSION_SECRET_DEV,
+    SESSION_SECRET_PROD,
+    MONGO_DEV_URL,
+    MONGO_PROD_URL
   } = process.env;
 
   const LOG_LEVEL = ENVIRONMENT === 'development' ? 'dev' : 'common';
-  const PORT = process.env.PORT || 8888;
+
+  const PORT = process.env.PORT || 8888; // optionally set to heroku's default port
 
   const LOGIN_URL = '/login';
   const SIGNUP_URL = '/signup'
@@ -20,8 +25,8 @@ module.exports = (() => {
   const LOGOUT_URL = '/logout';
 
   const SESSION_SECRET = ENVIRONMENT === 'development'
-    ? process.env.SESSION_SECRET_DEV
-    : process.env.SESSION_SECRET_PROD;
+    ? SESSION_SECRET_DEV
+    : SESSION_SECRET_PROD;
 
   const AUTHORIZE_ROOT_URL = '/authorize';
   const AUTHORIZE_SLACK_ROOT_URL = '/authorize/slack';
@@ -41,8 +46,8 @@ module.exports = (() => {
   const SPOTIFY_SCOPE = 'playlist-modify-public';
 
   const MONGO_URL = ENVIRONMENT === 'development'
-    ? process.env.MONGO_DEV_URL
-    : process.env.MONGO_PROD_URL;
+    ? MONGO_DEV_URL
+    : MONGO_PROD_URL;
 
   return {
     SLACK_CLIENT_ID,
@@ -51,6 +56,11 @@ module.exports = (() => {
     SLACK_BOT_TOKEN,
     SPOTIFY_CLIENT_ID,
     SPOTIFY_CLIENT_SECRET,
+    ENVIRONMENT,
+    SESSION_SECRET_DEV,
+    SESSION_SECRET_PROD,
+    MONGO_DEV_URL,
+    MONGO_PROD_URL,
 
     LOG_LEVEL,
     PORT,
