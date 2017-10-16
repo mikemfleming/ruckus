@@ -18,6 +18,7 @@ module.exports = (() => {
   const LOG_LEVEL = ENVIRONMENT === 'development' ? 'dev' : 'common';
 
   const PORT = process.env.PORT || 8888; // optionally set to heroku's default port
+  const REDIS_PORT = Number(PORT) + 1;
 
   const LOGIN_URL = '/login';
   const SIGNUP_URL = '/signup'
@@ -63,7 +64,9 @@ module.exports = (() => {
     MONGO_PROD_URL,
 
     LOG_LEVEL,
+
     PORT,
+    REDIS_PORT,
 
     LOGIN_URL,
     SIGNUP_URL,
