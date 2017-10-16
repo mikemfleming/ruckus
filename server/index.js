@@ -8,6 +8,8 @@ const cookieParser = require('cookie-parser');
 const flash = require('connect-flash');
 const morgan = require('morgan');
 const session = require('express-session');
+const RedisStore = require('connect-redis')(session);
+const redisClient = require('redis').createClient();
 const passport = require('passport');
 const mongoose = require('mongoose');
 
@@ -29,9 +31,22 @@ exports.listen = function(port) {
   app.use(cookieParser());
   app.use(morgan(config.LOG_LEVEL));
 
+  // configure redis options
+  const sessionOptions = {
+    host: 'localhost',
+    port: config.REDIS_PORT,
+    client: redisClient,
+    ttl: 260
+  };
+
+  // set up session with redis memory store
+  app.use(session({
+    store: new RedisStore(sessionOptions),
+    secret: config.SESSION_SECRET
+  }));
+
   // set up passport auth and ejs templating
   app.set('view engine', 'ejs');
-  app.use(session({ secret: config.SESSION_SECRET }));
   app.use(passport.initialize());
   app.use(passport.session());
   app.use(flash());
