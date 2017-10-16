@@ -12,6 +12,7 @@ const RedisStore = require('connect-redis')(session);
 const redisClient = require('redis').createClient();
 const passport = require('passport');
 const mongoose = require('mongoose');
+const helmet = require('helmet');
 
 // required files
 const api = require('./api');
@@ -21,15 +22,16 @@ const config = require('../config/main.config');
 mongoose.promise = Promise;
 
 exports.listen = function(port) {
+  // middleware
+  app.use(helmet());
+  app.use(bodyParser());
+  app.use(cookieParser());
+  app.use(morgan(config.LOG_LEVEL));
+  
   // connect to db
   mongoose.connect(config.MONGO_URL);
 
   require('../config/passport.js')(passport);
-
-  // middleware
-  app.use(bodyParser());
-  app.use(cookieParser());
-  app.use(morgan(config.LOG_LEVEL));
 
   // configure redis options
   const sessionOptions = {
