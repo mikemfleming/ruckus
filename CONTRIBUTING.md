@@ -12,6 +12,7 @@ When contributing to this repository, please first discuss the change you wish t
 ## Getting Started
 - Run `npm start`
 - In another window, run `redis-server`
+- Take a peek at  http://localhost:8888
 
 ## Git Workflow
 - Find or create an issue to work on, for example an issue called Add Kittens and numbered 13
