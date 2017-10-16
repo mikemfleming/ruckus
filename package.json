@@ -5,32 +5,36 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon index.js",
-    "test": "./node_modules/mocha/bin/mocha test --recursive"
+    "test": "snyk test && ./node_modules/mocha/bin/mocha test --recursive",
+    "snyk-protect": "snyk protect",
+    "prepare": "npm run snyk-protect"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "axios": "^0.16.2",
     "bcrypt": "^1.0.3",
-    "body-parser": "^1.17.2",
+    "body-parser": "^1.18.2",
     "connect-flash": "^0.1.1",
     "connect-redis": "^3.3.2",
     "cookie-parser": "^1.4.3",
     "dotenv": "^4.0.0",
     "ejs": "^2.5.7",
-    "express": "^4.15.4",
+    "express": "^4.16.0",
     "express-session": "^1.15.6",
-    "mongoose": "^4.11.11",
-    "morgan": "^1.8.2",
+    "mongoose": "^4.11.14",
+    "morgan": "^1.9.0",
     "nodemon": "^1.11.0",
     "passport": "^0.4.0",
     "passport-local": "^1.0.0",
     "passport-slack": "0.0.7",
     "querystring": "^0.2.0",
     "redis": "^2.8.0",
-    "request": "^2.81.0"
+    "request": "^2.81.0",
+    "snyk": "^1.42.7"
   },
   "devDependencies": {
     "mocha": "^4.0.1"
-  }
+  },
+  "snyk": true
 }
