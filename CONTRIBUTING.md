@@ -14,7 +14,7 @@ When contributing to this repository, please first discuss the change you wish t
 - In another window, run `redis-server`
 
 ## Git Workflow
-- Find or create an issue to work on, for example an issue called add kittens and numbered 13
+- Find or create an issue to work on, for example an issue called Add Kittens and numbered 13
 - Branch off of your local dev branch `git checkout -b KITTENS-13 remotes/origin/dev`
 - Add changes and make commits locally
 - Push your branch to github `git push origin KITTENS-13`
