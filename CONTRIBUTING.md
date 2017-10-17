@@ -7,18 +7,18 @@ When contributing to this repository, please first discuss the change you wish t
 - Clone down your fork
 - Set up a remote to track this repo's dev branch `git remote add upstream https://github.com/mikemfleming/spot-dawg.git`
 - Update upstream `git fetch upstream`
+- SD uses snyk to find, fix, and monitor vulnerabilities in npm `npm install -g snyk`
 - Run `npm install`
 - Check your Node version. I use v8.6.0 and recommend using Node Version Manager
 - Set up your environment variables
 
 ## Run Tests
-- I use snyk to find, fix, and monitor vulnerabilities in npm `npm install -g snyk`
 - Run the tests `npm test`
 
 ## Start Working
 - Run `npm start`
 - In another window, run `redis-server`
-- Take a peek at  http://localhost:8888
+- Take a peek at http://localhost:8888
 
 ## Git Workflow
 - Find or create an issue in this repo's issues tab to work on, for example: an issue called Add Kittens and numbered 13
