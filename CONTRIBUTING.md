@@ -22,10 +22,12 @@ When contributing to this repository, please first discuss the change you wish t
 
 ## Git Workflow
 - Find or create an issue in this repo's issues tab to work on, for example: an issue called Add Kittens and numbered 13
-- Branch off of your upstream remote `git checkout -b KITTENS-13 -t upstream/master`
-- Add changes and make commits
-- Rebase `git rebase upstream/master`
-- Run the tests `npm test`
-- Push your changes `git push origin KITTENS-13`
-- Push your branch to github `git push origin KITTENS-13`
-- Submit your pull request from your dev branch to ours and add `resolve #13` in your pull request comments
+- Branch off of your upstream remote `git checkout -b KITTENS-13 -t upstream/dev`
+- Add changes and make commits!
+
+## Making a Pull Request
+- Rebase your branch `git rebase upstream/dev`
+- Run the tests to confirm it's working as expected `npm test`
+- Push your changes up to your fork `git push origin KITTENS-13`
+- Open a pull request with the follow settings: `base fork: mikemfleming/spot-dawg base: dev` and `head fork: YOU/spot-dawg compare: KITTENS-13`
+- Add `resolve #13` in your pull request comments to link it to the issue it resolves
