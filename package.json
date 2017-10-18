@@ -8,7 +8,7 @@
     "test": "snyk test && ./node_modules/mocha/bin/mocha test --recursive",
     "snyk-protect": "snyk protect",
     "prepare": "npm run snyk-protect",
-    "proxy": "./node_modules/ngrok/bin/ngrok http 8888"
+    "proxy": "./node_modules/ngrok/bin/ngrok http -subdomain=ruckus 8888"
   },
   "author": "",
   "license": "ISC",
