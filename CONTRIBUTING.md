@@ -5,9 +5,9 @@ When contributing to this repository, please first discuss the change you wish t
 ## First Steps
 - Fork the repo
 - Clone down your fork
-- Set up a remote to track this repo's dev branch `git remote add upstream https://github.com/mikemfleming/spot-dawg.git`
+- Set up a remote to track this repo's dev branch `git remote add upstream https://github.com/mikemfleming/ruckus.git`
 - Update upstream `git fetch upstream`
-- SD uses snyk to find, fix, and monitor vulnerabilities in npm `npm install -g snyk`
+- Ruckus uses snyk to find, fix, and monitor vulnerabilities in npm `npm install -g snyk`
 - Run `npm install`
 - Check your Node version. I use v8.6.0 and recommend using Node Version Manager
 - Set up your environment variables
@@ -30,5 +30,5 @@ When contributing to this repository, please first discuss the change you wish t
 - Rebase your branch `git rebase upstream/dev`
 - Run the tests to confirm it's working as expected `npm test`
 - Push your changes up to your fork `git push origin KITTENS-13`
-- Open a pull request with the follow settings: `base fork: mikemfleming/spot-dawg base: dev` and `head fork: YOU/spot-dawg compare: KITTENS-13`
+- Open a pull request with the follow settings: `base fork: mikemfleming/ruckus base: dev` and `head fork: YOU/ruckus compare: KITTENS-13`
 - Add `resolve #13` in your pull request comments to link it to the issue it resolves
