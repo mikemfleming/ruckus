@@ -1,6 +1,7 @@
 'use strict';
 
 const request = require('request');
+const axios = require('axios');
 
 const querystring = require('querystring');
 
@@ -35,52 +36,48 @@ exports.callback = (req, res) => {
     } else {
         res.clearCookie(stateKey);
 
-        const authOptions = {
+        const options = {
             url: 'https://accounts.spotify.com/api/token',
-            form: {
+            method: 'post',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            params: {
                 code: code,
                 redirect_uri: config.SPOTIFY_REDIRECT_URI,
                 grant_type: 'authorization_code'
             },
-            headers: {
-                'Authorization': 'Basic ' + (new Buffer(config.SPOTIFY_CLIENT_ID + ':' + config.SPOTIFY_CLIENT_SECRET).toString('base64'))
-            },
-            json: true
+            headers: { 'Authorization': 'Basic ' + (new Buffer(config.SPOTIFY_CLIENT_ID + ':' + config.SPOTIFY_CLIENT_SECRET).toString('base64')) }
         };
 
-        // closures are expensive, avoid!
-        request.post(authOptions, function(error, response, body) {
-            if (!error && response.statusCode === 200) {
+        axios(options)
+            .then((response) => {
+                // Object.keys(response) => [ 'status', 'statusText', 'headers', 'config', 'request', 'data' ]
+                // Object.keys(response.data) => [ 'access_token', 'token_type', 'expires_in', 'refresh_token', 'scope' ]
 
-                const access_token = body.access_token,
-                    refresh_token = body.refresh_token;
+                // now save the tokens to the current user
+                const { access_token, refresh_token } = response.data;
 
                 const options = {
                     url: 'https://api.spotify.com/v1/me',
-                    headers: { 'Authorization': 'Bearer ' + access_token },
-                    json: true
+                    method: 'get',
+                    headers: {
+                        'Authorization': 'Bearer ' + access_token,
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
                 };
 
-                // use the access token to access the Spotify Web API
-                request.get(options, function(error, response, body) {
-                    const currentUser = req.session.passport.user;
-                    User.findById(currentUser)
-                        .then(user => {
-                            console.log('~~~~~', user)
-                            user.spotifyAccessToken = access_token;
-                            user.spotifyRefreshToken = refresh_token;
-                            user.save();
-                        })
-                        .then(() => res.redirect(config.PROFILE_URL))
-                        .catch(error => console.log('error updating user spotify info', error))
-                });
-            } else {
-            res.redirect('/#' +
-                querystring.stringify({
-                    error: 'invalid_token'
-                }));
-            }
-        });
+                // use access token to access the Spotify API
+                axios(options)
+                    .then((response) => {
+                        console.log('success ~~~~~~~~~~~~~~~~~~', Object.keys(response))
+                    })
+                    .catch((error) => {
+                        console.log('error ~~~~~~~~~~~~~~~~~~', error.response)
+                    });
+
+            })
+            .catch((err) => {
+                res.redirect('/#' + querystring.stringify({ error: 'invalid_token' }));
+            });
     }
 };
 
