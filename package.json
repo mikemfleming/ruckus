@@ -31,7 +31,6 @@
     "passport-slack": "0.0.7",
     "querystring": "^0.2.0",
     "redis": "^2.8.0",
-    "request": "^2.81.0",
     "snyk": "^1.42.7"
   },
   "devDependencies": {
