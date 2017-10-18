@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon index.js",
+    "start": "node index.js",
     "test": "snyk test && ./node_modules/mocha/bin/mocha test --recursive",
     "snyk-protect": "snyk protect",
     "prepare": "npm run snyk-protect"
@@ -28,7 +28,6 @@
     "nodemon": "^1.11.0",
     "passport": "^0.4.0",
     "passport-local": "^1.0.0",
-    "passport-slack": "0.0.7",
     "querystring": "^0.2.0",
     "redis": "^2.8.0",
     "snyk": "^1.42.7"

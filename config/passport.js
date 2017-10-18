@@ -1,7 +1,6 @@
 'use strict';
 
 const LocalStrategy = require('passport-local');
-const SlackStrategy = require('passport-slack').Strategy;
 
 const User = require('../server/models/users');
 const config = require('./main.config');
