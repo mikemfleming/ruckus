@@ -7,7 +7,8 @@
     "start": "node index.js",
     "test": "snyk test && ./node_modules/mocha/bin/mocha test --recursive",
     "snyk-protect": "snyk protect",
-    "prepare": "npm run snyk-protect"
+    "prepare": "npm run snyk-protect",
+    "proxy": "./node_modules/ngrok/bin/ngrok http 8888"
   },
   "author": "",
   "license": "ISC",
@@ -33,7 +34,8 @@
     "snyk": "^1.42.7"
   },
   "devDependencies": {
-    "mocha": "^4.0.1"
+    "mocha": "^4.0.1",
+    "ngrok": "^2.2.23"
   },
   "snyk": true
 }

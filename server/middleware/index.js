@@ -32,7 +32,7 @@ exports.handleError = (err, req, res, next) => {
 };
 
 exports.filter = (req, res, next) => {
-  const isUserGenerated = !!req.body.event.user;
+  const isUserGenerated = !!req.body.event && req.body.event.user;
   const isChallengeRequest = req.body.type === 'url_verification';
 
   if (isUserGenerated) {

@@ -17,6 +17,7 @@ When contributing to this repository, please first discuss the change you wish t
 
 ## Start Working
 - Run `npm start`
+- Run `npm run proxy` to have the proxy server forward slack messages to your localhost
 - In another window, run `redis-server`
 - Take a peek at http://localhost:8888
 
