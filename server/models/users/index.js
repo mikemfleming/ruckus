@@ -11,8 +11,8 @@ const userSchema = mongoose.Schema({
     spotifyRefreshToken: String,
 });
 
-userSchema.methods.generateHash = (password) => {
-    return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
+userSchema.methods.generateHash = (value) => {
+    return bcrypt.hashSync(value, bcrypt.genSaltSync(12), null);
 };
 
 userSchema.methods.validPassword = (password) => {
