@@ -30,9 +30,13 @@ module.exports = (() => {
     : SESSION_SECRET_PROD;
 
   const AUTHORIZE_ROOT_URL = '/authorize';
+
   const AUTHORIZE_SLACK_ROOT_URL = '/authorize/slack';
+  const AUTHORIZE_SLACK_REDIRECT_URL = '/authorize/slack/redirect';
   const AUTHORIZE_SLACK_CALLBACK_URL = '/authorize/slack/callback';
+
   const AUTHORIZE_SPOTIFY_ROOT_URL = '/authorize/spotify';
+  const AUTHORIZE_SPOTIFY_REDIRECT_URL = '/authorize/spotify/redirect';
   const AUTHORIZE_SPOTIFY_CALLBACK_URL = '/authorize/spotify/callback';
 
   const SPOTIFY_REDIRECT_URI = ENVIRONMENT === 'development'
@@ -76,9 +80,13 @@ module.exports = (() => {
     SESSION_SECRET,
 
     AUTHORIZE_ROOT_URL,
+
     AUTHORIZE_SLACK_ROOT_URL,
+    AUTHORIZE_SLACK_REDIRECT_URL,
     AUTHORIZE_SLACK_CALLBACK_URL,
+
     AUTHORIZE_SPOTIFY_ROOT_URL,
+    AUTHORIZE_SPOTIFY_REDIRECT_URL,
     AUTHORIZE_SPOTIFY_CALLBACK_URL,
 
     SPOTIFY_REDIRECT_URI,

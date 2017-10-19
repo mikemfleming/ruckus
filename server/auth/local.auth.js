@@ -17,6 +17,10 @@ exports.logout = (req, res) => {
   res.redirect('/');
 };
 
-exports.authorize = (req, res) => {
-	res.render('authorize.ejs');
+exports.authorizeSlack = (req, res) => {
+	res.render('slack.ejs');
+};
+
+exports.authorizeSpotify = (req, res) => {
+	res.render('spotify.ejs');
 };

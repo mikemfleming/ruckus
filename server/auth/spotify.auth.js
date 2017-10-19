@@ -50,29 +50,36 @@ exports.callback = (req, res) => {
 
         axios(options)
             .then((response) => {
-                // Object.keys(response) => [ 'status', 'statusText', 'headers', 'config', 'request', 'data' ]
-                // Object.keys(response.data) => [ 'access_token', 'token_type', 'expires_in', 'refresh_token', 'scope' ]
-
                 // now save the tokens to the current user
                 const { access_token, refresh_token } = response.data;
+                const currentUser = req.session.passport.user;
 
-                const options = {
-                    url: 'https://api.spotify.com/v1/me',
-                    method: 'get',
-                    headers: {
-                        'Authorization': 'Bearer ' + access_token,
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                    },
-                };
-
-                // use access token to access the Spotify API
-                axios(options)
-                    .then((response) => {
-                        console.log('success ~~~~~~~~~~~~~~~~~~', Object.keys(response))
+                User.findById(currentUser)
+                    .then((user) => {
+                        user.spotifyAccessToken = user.generateHash(access_token);
+                        user.spotifyRefreshToken = user.generateHash(refresh_token);
+                        user.save();
                     })
-                    .catch((error) => {
-                        console.log('error ~~~~~~~~~~~~~~~~~~', error.response)
-                    });
+                    .then(() => res.redirect(config.PROFILE_URL))
+                    .catch((error) => console.log('error saving tokens', error));
+
+                // const options = {
+                //     url: 'https://api.spotify.com/v1/me',
+                //     method: 'get',
+                //     headers: {
+                //         'Authorization': 'Bearer ' + access_token,
+                //         'Content-Type': 'application/x-www-form-urlencoded',
+                //     },
+                // };
+
+                // // use access token to access the Spotify API
+                // axios(options)
+                //     .then((response) => {
+                //         console.log('success ~~~~~~~~~~~~~~~~~~', response.data)
+                //     })
+                //     .catch((error) => {
+                //         console.log('error ~~~~~~~~~~~~~~~~~~', error.response)
+                //     });
 
             })
             .catch((err) => {
