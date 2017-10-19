@@ -46,15 +46,15 @@ exports.callback = (req, res) => {
 
         // this needs to be somewhere else
         function saveTeamToUser (res) {
-            const team = res.data ? res.data.team : null;
-            if (!team) throw new Error('Team id not present in Slack response.');
+            const teamData = res.data ? res.data.team : null;
+            if (!teamData) throw new Error('Team field not present in Slack response.');
             const currentUser = req.session.passport.user;
 
             User.findById(currentUser)
                 .then(user => {
-                    const isUnique = user.slackTeams.includes(team);
-                    if (!isUnique) {
-                        user.slackTeams.push(team);
+                    const isUnique = user.slackTeams.filter((team) => team.id === teamData.id).length === 0;
+                    if (isUnique) {
+                        user.slackTeams.push(teamData);
                         user.save();
                     }
                 })
