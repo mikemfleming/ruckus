@@ -55,6 +55,14 @@ exports.callback = (req, res) => {
 
                 // now save the tokens to the current user
                 const { access_token, refresh_token } = response.data;
+                const currentUser = req.session.passport.user;
+
+                User.findById(currentUser)
+                    .then((user) => {
+                        user.spotifyAccessToken = user.generateHash(access_token);
+                        user.spotifyRefreshToken = user.generateHash(refresh_token);
+                        user.save();
+                    })
 
                 const options = {
                     url: 'https://api.spotify.com/v1/me',
@@ -68,7 +76,7 @@ exports.callback = (req, res) => {
                 // use access token to access the Spotify API
                 axios(options)
                     .then((response) => {
-                        console.log('success ~~~~~~~~~~~~~~~~~~', Object.keys(response))
+                        console.log('success ~~~~~~~~~~~~~~~~~~', response.data)
                     })
                     .catch((error) => {
                         console.log('error ~~~~~~~~~~~~~~~~~~', error.response)
