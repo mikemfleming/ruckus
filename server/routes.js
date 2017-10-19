@@ -28,10 +28,13 @@ module.exports = function (app) {
 
 	app.get(config.LOGOUT_URL, localAuth.logout);
 
-	app.get(config.AUTHORIZE_ROOT_URL, middleware.isLoggedIn, localAuth.authorize);
-	app.get(config.AUTHORIZE_SLACK_ROOT_URL, middleware.isLoggedIn, slackAuth.authorize);
+	// authorize Slack for team info
+	app.get(config.AUTHORIZE_SLACK_ROOT_URL, middleware.isLoggedIn, localAuth.authorizeSlack);
+	app.get(config.AUTHORIZE_SLACK_REDIRECT_URL, middleware.isLoggedIn, slackAuth.authorize);
 	app.get(config.AUTHORIZE_SLACK_CALLBACK_URL, middleware.isLoggedIn, slackAuth.callback);
 
-	app.get(config.AUTHORIZE_SPOTIFY_ROOT_URL, middleware.isLoggedIn, spotifyAuth.authorize);
+	// authorize Spotify for tokens
+	app.get(config.AUTHORIZE_SPOTIFY_ROOT_URL, middleware.isLoggedIn, localAuth.authorizeSpotify);
+	app.get(config.AUTHORIZE_SPOTIFY_REDIRECT_URL, middleware.isLoggedIn, spotifyAuth.authorize);
 	app.get(config.AUTHORIZE_SPOTIFY_CALLBACK_URL, middleware.isLoggedIn, spotifyAuth.callback);
 };
