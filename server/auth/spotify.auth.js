@@ -48,43 +48,18 @@ exports.callback = (req, res) => {
             headers: { 'Authorization': 'Basic ' + (new Buffer(config.SPOTIFY_CLIENT_ID + ':' + config.SPOTIFY_CLIENT_SECRET).toString('base64')) }
         };
 
-        axios(options)
-            .then((response) => {
-                // now save the tokens to the current user
-                const { access_token, refresh_token } = response.data;
-                const currentUser = req.session.passport.user;
-
-                User.findById(currentUser)
-                    .then((user) => {
-                        user.spotifyAccessToken = user.generateHash(access_token);
-                        user.spotifyRefreshToken = user.generateHash(refresh_token);
-                        user.save();
-                    })
-                    .then(() => res.redirect(config.PROFILE_URL))
-                    .catch((error) => console.log('error saving tokens', error));
-
-                // const options = {
-                //     url: 'https://api.spotify.com/v1/me',
-                //     method: 'get',
-                //     headers: {
-                //         'Authorization': 'Bearer ' + access_token,
-                //         'Content-Type': 'application/x-www-form-urlencoded',
-                //     },
-                // };
-
-                // // use access token to access the Spotify API
-                // axios(options)
-                //     .then((response) => {
-                //         console.log('success ~~~~~~~~~~~~~~~~~~', response.data)
-                //     })
-                //     .catch((error) => {
-                //         console.log('error ~~~~~~~~~~~~~~~~~~', error.response)
-                //     });
-
-            })
+        axios(options) // spotify doesn't like .get?
+            .then(saveTokens)
+            .then(() => res.redirect(config.PROFILE_URL))
             .catch((err) => {
+                console.log(err)
                 res.redirect('/#' + querystring.stringify({ error: 'invalid_token' }));
             });
+
+        function saveTokens (res) {
+            // this needs better logic here
+            User.addSpotifyTokens(req.session.passport.user, res.data);
+        }
     }
 };
 

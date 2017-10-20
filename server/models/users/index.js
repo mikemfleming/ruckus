@@ -27,7 +27,18 @@ userSchema.statics.addSlackTeam = function (userId, teamData) {
 			    user.slackTeams.push(teamData);
 			    user.save();
 			}
-		})
+		});
+};
+
+userSchema.statics.addSpotifyTokens = function (userId, tokens) {
+	const { access_token, refresh_token } = tokens;
+
+	this.findById(userId)
+		.then(function (user) {
+			user.spotifyAccessToken = user.generateHash(access_token);
+			user.spotifyRefreshToken = user.generateHash(refresh_token);
+			user.save();
+		});
 };
 
 module.exports = mongoose.model('User', userSchema);
