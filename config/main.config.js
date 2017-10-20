@@ -51,7 +51,7 @@ module.exports = (() => {
   const SPOTIFY_SCOPE = 'playlist-modify-public';
 
   const MONGO_URL = ENVIRONMENT === 'development'
-    ? MONGO_DEV_URL
+    ? 'mongodb://localhost:27017/ruckus'
     : MONGO_PROD_URL;
 
   return {
