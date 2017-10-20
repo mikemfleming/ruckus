@@ -19,4 +19,15 @@ userSchema.methods.validPassword = (password) => {
     return bcrypt.compareSync(password, this.password);
 };
 
+userSchema.statics.addSlackTeam = function (userId, teamData) {
+	this.findById(userId)
+		.then(function (user) {
+			const isUnique = user.slackTeams.filter((team) => team.id === teamData.id).length === 0;
+			if (isUnique) {
+			    user.slackTeams.push(teamData);
+			    user.save();
+			}
+		})
+};
+
 module.exports = mongoose.model('User', userSchema);
