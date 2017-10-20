@@ -19,4 +19,26 @@ userSchema.methods.validPassword = (password) => {
     return bcrypt.compareSync(password, this.password);
 };
 
+userSchema.statics.addSlackTeam = function (userId, teamData) {
+	this.findById(userId)
+		.then(function (user) {
+			const isUnique = user.slackTeams.filter((team) => team.id === teamData.id).length === 0;
+			if (isUnique) {
+			    user.slackTeams.push(teamData);
+			    user.save();
+			}
+		});
+};
+
+userSchema.statics.addSpotifyTokens = function (userId, tokens) {
+	const { access_token, refresh_token } = tokens;
+
+	this.findById(userId)
+		.then(function (user) {
+			user.spotifyAccessToken = user.generateHash(access_token);
+			user.spotifyRefreshToken = user.generateHash(refresh_token);
+			user.save();
+		});
+};
+
 module.exports = mongoose.model('User', userSchema);

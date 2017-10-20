@@ -44,21 +44,10 @@ exports.callback = (req, res) => {
             .then(() => res.redirect(config.AUTHORIZE_SPOTIFY_ROOT_URL))
             .catch(error => console.log('error in slack oauth callback', error));
 
-        // this needs to be somewhere else
         function saveTeamToUser (res) {
             const teamData = res.data ? res.data.team : null;
             if (!teamData) throw new Error('Team field not present in Slack response.');
-            const currentUser = req.session.passport.user;
-
-            User.findById(currentUser)
-                .then(user => {
-                    const isUnique = user.slackTeams.filter((team) => team.id === teamData.id).length === 0;
-                    if (isUnique) {
-                        user.slackTeams.push(teamData);
-                        user.save();
-                    }
-                })
-                .catch(error => console.log('error updating user', error));
+            User.addSlackTeam(req.session.passport.user, teamData);
         }
     }
 };
