@@ -4,7 +4,7 @@ const querystring = require('querystring');
 const axios = require('axios');
 
 const config = require('../../config/main.config');
-const authUtil = require('../helpers/auth.util');
+const authUtil = require('../util/auth.util');
 const User = require('../models/users');
 
 const stateKey = 'slack_auth_state'; // confirms req is from slack
@@ -18,7 +18,7 @@ exports.authorize = (req, res) => {
       state: state,
     });
 
-    res.cookie(stateKey, state); // #addToConfig
+    res.cookie(stateKey, state);
 
     res.redirect(`https://slack.com/oauth/authorize?${query}`);
 };
@@ -32,22 +32,36 @@ exports.callback = (req, res) => {
     } else {
         res.clearCookie(stateKey);
 
-        const params = {
-            client_id: config.SLACK_CLIENT_ID,
-            client_secret: config.SLACK_CLIENT_SECRET,
-            code,
-            redirect_uri: config.SLACK_REDIRECT_URI,
-        };
-
-        axios.get('https://slack.com/api/oauth.access', { params })
+        getSlackDetails(code)
             .then(saveTeamToUser)
-            .then(() => res.redirect(config.AUTHORIZE_SPOTIFY_ROOT_URL))
-            .catch(error => console.log('error in slack oauth callback', error));
+            .then(successRedirect)
+            .catch(failureRedirect);
+        
+
+        function getSlackDetails (authorization_code) {
+            const params = {
+                client_id: config.SLACK_CLIENT_ID,
+                client_secret: config.SLACK_CLIENT_SECRET,
+                code: authorization_code,
+                redirect_uri: config.SLACK_REDIRECT_URI,
+            };
+
+            return axios.get('https://slack.com/api/oauth.access', { params });
+        }
 
         function saveTeamToUser (res) {
             const teamData = res.data ? res.data.team : null;
             if (!teamData) throw new Error('Team field not present in Slack response.');
             User.addSlackTeam(req.session.passport.user, teamData);
+        }
+
+        function successRedirect () {
+            res.redirect(config.AUTHORIZE_SPOTIFY_ROOT_URL);
+        }
+
+        function failureRedirect (error) {
+            const message = error.message || 'slack_callback_failed';
+            res.redirect('/#' + querystring.stringify({ error: message }));
         }
     }
 };

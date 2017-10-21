@@ -5,7 +5,7 @@ const axios = require('axios');
 
 const querystring = require('querystring');
 
-const authUtil = require('../helpers/auth.util');
+const authUtil = require('../util/auth.util');
 const config = require('../../config/main.config');
 const User = require('../models/users');
 
@@ -36,29 +36,40 @@ exports.callback = (req, res) => {
     } else {
         res.clearCookie(stateKey);
 
-        const options = {
-            url: 'https://accounts.spotify.com/api/token',
-            method: 'post',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            params: {
-                code: code,
-                redirect_uri: config.SPOTIFY_REDIRECT_URI,
-                grant_type: 'authorization_code'
-            },
-            headers: { 'Authorization': 'Basic ' + (new Buffer(config.SPOTIFY_CLIENT_ID + ':' + config.SPOTIFY_CLIENT_SECRET).toString('base64')) }
-        };
-
-        axios(options) // spotify doesn't like .get?
+        getSpotifyTokens(code)
             .then(saveTokens)
-            .then(() => res.redirect(config.PROFILE_URL))
-            .catch((err) => {
-                console.log(err)
-                res.redirect('/#' + querystring.stringify({ error: 'invalid_token' }));
-            });
+            .then(successRedirect)
+            .catch(failureRedirect);
+        
+
+        function getSpotifyTokens (authorization_code) {
+            const options = {
+                url: 'https://accounts.spotify.com/api/token',
+                method: 'post',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                params: {
+                    code: authorization_code,
+                    redirect_uri: config.SPOTIFY_REDIRECT_URI,
+                    grant_type: 'authorization_code'
+                },
+                headers: { 'Authorization': 'Basic ' + (new Buffer(config.SPOTIFY_CLIENT_ID + ':' + config.SPOTIFY_CLIENT_SECRET).toString('base64')) }
+            };
+
+            return axios(options) // spotify doesn't like .get?
+        }
 
         function saveTokens (res) {
             // this needs better logic here
             User.addSpotifyTokens(req.session.passport.user, res.data);
+        }
+
+        function successRedirect () {
+            res.redirect(config.PROFILE_URL);
+        }
+
+        function failureRedirect (error) {
+            const message = error.message || 'spotify_callback_failed';
+            res.redirect('/#' + querystring.stringify({ error: message }));
         }
     }
 };
