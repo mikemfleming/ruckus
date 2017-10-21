@@ -5,7 +5,7 @@ const axios = require('axios');
 
 const querystring = require('querystring');
 
-const authUtil = require('../helpers/auth.util');
+const authUtil = require('../util/auth.util');
 const config = require('../../config/main.config');
 const User = require('../models/users');
 

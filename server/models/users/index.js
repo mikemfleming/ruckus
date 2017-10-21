@@ -20,13 +20,16 @@ userSchema.methods.validPassword = (password) => {
 };
 
 userSchema.statics.addSlackTeam = function (userId, teamData) {
-	this.findById(userId)
+	return this.findById(userId)
 		.then(function (user) {
 			const isUnique = user.slackTeams.filter((team) => team.id === teamData.id).length === 0;
 			if (isUnique) {
 			    user.slackTeams.push(teamData);
 			    user.save();
 			}
+		})
+		.catch(function (err) {
+			throw new Error('Error adding Slack team');
 		});
 };
 
