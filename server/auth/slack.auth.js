@@ -18,7 +18,7 @@ exports.authorize = (req, res) => {
       state: state,
     });
 
-    res.cookie(stateKey, state); // #addToConfig
+    res.cookie(stateKey, state);
 
     res.redirect(`https://slack.com/oauth/authorize?${query}`);
 };
@@ -60,7 +60,7 @@ exports.callback = (req, res) => {
         }
 
         function failureRedirect (error) {
-            const message = error.message || 'callback_failed';
+            const message = error.message || 'slack_callback_failed';
             res.redirect('/#' + querystring.stringify({ error: message }));
         }
     }
