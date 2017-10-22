@@ -1,23 +1,23 @@
-// 'use strict';
+'use strict';
 
-// const request = require('request');
+const axios = require('axios');
+const slack = require('../../util/slack.util');
 
-// const config = require('../../../config/main.config');
-// const slack = require('../../helpers/slack.util');
+exports.add = (trackId, account) => {
 
-// exports.add = (track) => {
-//   console.log('add track: ', track);
+  const config = {
+    url: 'https://api.spotify.com/v1/users/1228406874/playlists/4qIaLCTPEef0Zsy8G4deZz/tracks',
+    method: 'post',
+    headers: { 
+      Authorization: 'Bearer ' + account.accessToken,
+      'Content-Type': 'application/x-www-form-urlencoded'
+    },
+    params: {
+      uris: `spotify:track:${trackId}`
+    }
+  };
 
-//   const options = {
-//     url: `https://api.spotify.com/v1/users/1228406874/playlists/4qIaLCTPEef0Zsy8G4deZz/tracks?uris=spotify:track:${track}`,
-//     headers: { Authorization: 'Bearer ' + process.env.mike }, // garbage code
-//     json: true,
-
-//   };
-//   const callback = (err, response, body) => {
-//     if (err || body.error) return console.log('error ', body.error);
-//     slack.respond();
-//   };
-
-//   request.post(options, callback);
-// };
+  axios(config)
+    .then(x => console.log('~~~~~~~~~~~~~~ added track'))
+    .catch(y => console.log('~~~~~~~~~~~~~~ error', y.response.data.error.message))
+};
