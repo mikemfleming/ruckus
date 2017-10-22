@@ -14,4 +14,6 @@ slackAccountSchema.statics.addNewAccount = function (userId, teamId) {
 	return newSlackAccount.save();
 };
 
+slackAccountSchema.index({ userId: 1, teamId: 1 }, { unique: true }); // enforce unique documents
+
 module.exports = mongoose.model('SlackAccount', slackAccountSchema);
