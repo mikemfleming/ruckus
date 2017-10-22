@@ -1,10 +1,12 @@
 'use strict';
 
 const tracks = require('../../models/spotify');
-const User = require('../../models/users');
+const SlackAccounts = require('../../models/slackAccounts');
+const SpotifyAccounts = require('../../models/spotifyAccounts');
 
 module.exports = (req, res) => {
   const messageText = req.body.event.text;
+  const teamId = req.body.team_id;
   const spotifyTrack = /https:\/\/open.spotify.com\/track\/(.{22})>?/.exec(messageText);
 
   console.log('~~~~~~~~~~~ caught a message', messageText);
@@ -12,11 +14,21 @@ module.exports = (req, res) => {
   if (messageText && spotifyTrack) {
     const trackId = spotifyTrack[1];
 
-    // a track is shared in one team
+    console.log('~~~~~~~~~~~ caught a track', trackId);
 
-    // for each user on that slack team
+    SlackAccounts.find({ teamId })
+      .then((accounts) => {
+        accounts.forEach((account) => {
+          const userId = account.userId;
 
-    // add that track to that user's spotify playlist
+          SpotifyAccounts.findOne({ userId })
+            .then((account) => {
+              // send track to this accounts spotify playlist
+              tracks.add(trackId, account)
+            });
+
+        });
+      })
 
   }
 
