@@ -7,7 +7,7 @@ const querystring = require('querystring');
 
 const authUtil = require('../util/auth.util');
 const config = require('../../config/main.config');
-const User = require('../models/users');
+const SpotifyAccounts = require('../models/spotifyAccounts');
 
 const stateKey = 'spotify_auth_state'; // confirms req is from spotify
 
@@ -60,7 +60,9 @@ exports.callback = (req, res) => {
 
         function saveTokens (res) {
             // this needs better logic here
-            User.addSpotifyTokens(req.session.passport.user, res.data);
+            const { access_token, refresh_token } = res.data;
+            const currentUserId = req.session.passport.user;
+            return SpotifyAccounts.saveTokens(currentUserId, access_token, refresh_token);
         }
 
         function successRedirect () {

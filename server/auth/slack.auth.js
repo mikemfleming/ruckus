@@ -5,7 +5,7 @@ const axios = require('axios');
 
 const config = require('../../config/main.config');
 const authUtil = require('../util/auth.util');
-const User = require('../models/users');
+const SlackAccounts = require('../models/slackAccounts');
 
 const stateKey = 'slack_auth_state'; // confirms req is from slack
 
@@ -33,7 +33,7 @@ exports.callback = (req, res) => {
         res.clearCookie(stateKey);
 
         getSlackDetails(code)
-            .then(saveTeamToUser)
+            .then(saveTeam)
             .then(successRedirect)
             .catch(failureRedirect);
         
@@ -49,10 +49,11 @@ exports.callback = (req, res) => {
             return axios.get('https://slack.com/api/oauth.access', { params });
         }
 
-        function saveTeamToUser (res) {
-            const teamData = res.data ? res.data.team : null;
-            if (!teamData) throw new Error('Team field not present in Slack response.');
-            User.addSlackTeam(req.session.passport.user, teamData);
+        function saveTeam (res) {
+            const teamId = (res.data && res.data.team) ? res.data.team.id : null;
+            const currentUserId = req.session.passport.user;
+            if (!teamId) throw new Error('Team field not present in Slack response.');
+            return SlackAccounts.addNewAccount(currentUserId, teamId);
         }
 
         function successRedirect () {

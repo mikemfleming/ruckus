@@ -1,6 +1,7 @@
 'use strict';
 
 const tracks = require('../../models/spotify');
+const User = require('../../models/users');
 
 module.exports = (req, res) => {
   const messageText = req.body.event.text;
@@ -10,7 +11,13 @@ module.exports = (req, res) => {
 
   if (messageText && spotifyTrack) {
     const trackId = spotifyTrack[1];
-    console.log('~~~~~~~~~~~~~~~ caught a track', trackId);
+
+    // a track is shared in one team
+
+    // for each user on that slack team
+
+    // add that track to that user's spotify playlist
+
   }
 
   res.end();
