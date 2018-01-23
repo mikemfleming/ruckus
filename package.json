@@ -6,6 +6,7 @@
   "scripts": {
     "start": "node index.js",
     "test": "snyk test && ./node_modules/mocha/bin/mocha test --recursive",
+    "dev": "./node_modules/.bin/nodemon",
     "snyk-protect": "snyk protect",
     "prepare": "npm run snyk-protect",
     "proxy": "./node_modules/ngrok/bin/ngrok http -subdomain=ruckus 8888"

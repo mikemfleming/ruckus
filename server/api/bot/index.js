@@ -1,6 +1,6 @@
 'use strict';
 
-const tracks = require('../../models/spotify');
+const tracks = require('../controllers/spotify.controller');
 const SlackAccounts = require('../../models/slackAccounts');
 const SpotifyAccounts = require('../../models/spotifyAccounts');
 

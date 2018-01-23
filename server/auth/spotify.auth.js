@@ -77,27 +77,26 @@ exports.callback = (req, res) => {
 };
 
 // send this as needed (when messages land)
-exports.refreshToken = function(req, res) {
-    console.log('refresh tokening')
-    // requesting access token from refresh token
-    // don't use var anymore
-    var refresh_token = req.query.refresh_token;
-    var authOptions = {
-        url: 'https://accounts.spotify.com/api/token',
-        headers: { 'Authorization': 'Basic ' + (new Buffer(config.SPOTIFY_CLIENT_ID + ':' + config.SPOTIFY_CLIENT_SECRET).toString('base64')) }, // #addToConfig
-        form: {
-            grant_type: 'refresh_token',
-            refresh_token: refresh_token
-        },
-        json: true
-    };
+exports.refreshToken = function (userId) {
+    console.log('~~~~ refreshing token')
+    return SpotifyAccounts.findOne({ userId })
+        .then((account) => {
+            const options = {
+                method: 'post',
+                url: 'https://accounts.spotify.com/api/token',
+                headers: {
+                    'Authorization': 'Basic ' + (new Buffer(config.SPOTIFY_CLIENT_ID + ':' + config.SPOTIFY_CLIENT_SECRET).toString('base64')),
+                },
+                params: {
+                    grant_type: 'authorization_code',
+                    code: account.accessToken,
+                    redirect_uri: config.SPOTIFY_REDIRECT_URI
+                },
+                json: true
+            };
 
-    request.post(authOptions, function(error, response, body) {
-        if (!error && response.statusCode === 200) {
-            var access_token = body.access_token;
-            res.send({
-                'access_token': access_token
-            });
-        }
-    });
+            return axios(options)
+                .then((res) => console.log('refreshToken fn success'))
+                .catch((error) => console.log('refreshToken fn error', error.response.data))
+        })
 };
