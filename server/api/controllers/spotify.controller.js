@@ -22,8 +22,8 @@ exports.add = function (trackId, account) {
   axios(config)
     .then(x => console.log('~~~~~~~~~~~~~~ added track'))
     .catch((error) => {
-      console.log('spotify ctrl error adding track', error)
-      if (error.status === 401 && error.message === 'The access token expired') {
+      console.log('spotify ctrl error adding track', error.response.status)
+      if (error.response.status === 401) {
         console.log('❤️ token expired, trying again')
         spotifyAuth.refreshToken(account.userId)
         //   .then(addOnce)

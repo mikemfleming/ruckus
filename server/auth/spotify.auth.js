@@ -81,6 +81,7 @@ exports.refreshToken = function (userId) {
     console.log('~~~~ refreshing token')
     return SpotifyAccounts.findOne({ userId })
         .then((account) => {
+            console.log(account)
             const options = {
                 method: 'post',
                 url: 'https://accounts.spotify.com/api/token',
@@ -88,15 +89,14 @@ exports.refreshToken = function (userId) {
                     'Authorization': 'Basic ' + (new Buffer(config.SPOTIFY_CLIENT_ID + ':' + config.SPOTIFY_CLIENT_SECRET).toString('base64')),
                 },
                 params: {
-                    grant_type: 'authorization_code',
-                    code: account.accessToken,
-                    redirect_uri: config.SPOTIFY_REDIRECT_URI
+                    grant_type: 'refresh_token',
+                    refresh_token: account.refreshToken
                 },
                 json: true
             };
 
             return axios(options)
-                .then((res) => console.log('refreshToken fn success'))
+                .then((res) => console.log('refreshToken fn success 🏔', res.data)) // start here
                 .catch((error) => console.log('refreshToken fn error', error.response.data))
         })
 };
