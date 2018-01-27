@@ -81,7 +81,6 @@ exports.refreshToken = function (userId) {
     console.log('~~~~ refreshing token')
     return SpotifyAccounts.findOne({ userId })
         .then((account) => {
-            console.log(account)
             const options = {
                 method: 'post',
                 url: 'https://accounts.spotify.com/api/token',
@@ -96,7 +95,11 @@ exports.refreshToken = function (userId) {
             };
 
             return axios(options)
-                .then((res) => console.log('refreshToken fn success 🏔', res.data)) // start here
+                .then((res) => {
+                    // console.log('refreshToken fn success 🏔', res.data)
+                    const accessToken = res.data.access_token;
+                    account.update({ accessToken }).then(x => console.log(x))
+                }) // start here
                 .catch((error) => console.log('refreshToken fn error', error.response.data))
         })
 };
