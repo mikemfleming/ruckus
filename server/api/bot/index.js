@@ -4,17 +4,17 @@ const tracks = require('../controllers/spotify.controller');
 const SlackAccounts = require('../../models/slackAccounts');
 const SpotifyAccounts = require('../../models/spotifyAccounts');
 
+const logger = require('../../../logger');
+
 module.exports = (req, res) => {
   const messageText = req.body.event.text;
   const teamId = req.body.team_id;
   const spotifyTrack = /https:\/\/open.spotify.com\/track\/(.{22})>?/.exec(messageText);
 
-  console.log('~~~~~~~~~~~ caught a message', messageText);
-
   if (messageText && spotifyTrack) {
-    const trackId = spotifyTrack[1];
+    logger.info('MESSAGE MATCHED REGEX FOR SPOTIFY TRACK');
 
-    console.log('~~~~~~~~~~~ caught a track', trackId);
+    const trackId = spotifyTrack[1];
 
     SlackAccounts.find({ teamId })
       .then((accounts) => {
@@ -23,7 +23,6 @@ module.exports = (req, res) => {
 
           SpotifyAccounts.findOne({ userId })
             .then((account) => {
-              // send track to this accounts spotify playlist
               tracks.add(trackId, account)
             });
 
@@ -32,5 +31,6 @@ module.exports = (req, res) => {
 
   }
 
+  // no reason to respond with data to slack at this time so end res 
   res.end();
 };

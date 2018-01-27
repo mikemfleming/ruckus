@@ -1,19 +1,14 @@
 'use strict';
 
-// dependencies
+const logger = require('../../logger');
 const config = require('../../config/main.config');
 
-exports.spy = (req, res, next) => {
-  if (config.LOG_LEVEL === 'debug') console.log(req.body);
-  next();
-};
-
 exports.isAuthorized = (req, res, next) => {
-  console.log('checking authorization');
+  logger.info('CHECKING AUTHORIZATION');
 
   // this is where we confirm this request came from slack
   if (req.body.token !== config.SLACK_VERIFICATION_TOKEN) {
-    console.log('not authorized');
+    logger.error('UNAUTHORIZED');
     next('Required: Slack Verification Token\n');
   } else {
     next();
@@ -21,13 +16,17 @@ exports.isAuthorized = (req, res, next) => {
 };
 
 exports.isLoggedIn = (req, res, next) => {
+  logger.info('CHECKING IF LOGGED IN');
   if (req.isAuthenticated()) {
+    logger.info('IS LOGGED IN');
     return next();
   }
+  logger.error('IS NOT LOGGED IN, REDIRECTING TO HOME');
   res.redirect('/');
 };
 
 exports.handleError = (err, req, res, next) => {
+  logger.error(err);
   res.status(500).send({ error: err });
 };
 
@@ -38,6 +37,7 @@ exports.filter = (req, res, next) => {
   if (isUserGenerated) {
     next();
   } else if (isChallengeRequest) {
+    logger.info('RESPONDING TO SLACK URL CHALLENGE REQUEST');
     res.set('Content-Type', 'text/plain');
     res.status(200).send(req.body.challenge);
   } else {

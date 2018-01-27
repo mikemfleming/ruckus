@@ -1,5 +1,6 @@
 'use strict';
 
+const logger = require('../../logger');
 const mongoose = require('mongoose');
 
 const slackAccountSchema = mongoose.Schema({
@@ -8,6 +9,8 @@ const slackAccountSchema = mongoose.Schema({
 });
 
 slackAccountSchema.statics.addNewAccount = function (userId, teamId) {
+	logger.info(`CREATING NEW ACCOUNT FOR user ${userId} on team ${teamId}`);
+
 	const newSlackAccount = new this();
 	newSlackAccount.userId = userId;
 	newSlackAccount.teamId = teamId;

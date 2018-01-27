@@ -1,5 +1,7 @@
 'use strict';
 
+const logger = require('../../logger');
+
 const querystring = require('querystring');
 const axios = require('axios');
 
@@ -10,6 +12,8 @@ const SlackAccounts = require('../models/slackAccounts');
 const stateKey = 'slack_auth_state'; // confirms req is from slack
 
 exports.authorize = (req, res) => {
+    logger.info('REDIRECTING TO SLACK OAUTH');
+
     const state = authUtil.generateRandomString(16);
     const query = querystring.stringify({
       client_id: config.SLACK_CLIENT_ID,
@@ -28,6 +32,7 @@ exports.callback = (req, res) => {
     const storedState = req.cookies ? req.cookies[stateKey] : null;
 
     if (!state || state !== storedState) {
+        logger.error('SLACK STATE MISMATCH');
         res.redirect('/#' + querystring.stringify({ error: 'state_mismatch' }));
     } else {
         res.clearCookie(stateKey);
@@ -39,6 +44,8 @@ exports.callback = (req, res) => {
         
 
         function getSlackDetails (authorization_code) {
+            logger.info('GETTING SLACK DETAILS');
+            
             const params = {
                 client_id: config.SLACK_CLIENT_ID,
                 client_secret: config.SLACK_CLIENT_SECRET,
@@ -53,6 +60,7 @@ exports.callback = (req, res) => {
             const teamId = (res.data && res.data.team) ? res.data.team.id : null;
             const currentUserId = req.session.passport.user;
             if (!teamId) throw new Error('Team field not present in Slack response.');
+            logger.info('SAVING SLACK TEAM');
             return SlackAccounts.addNewAccount(currentUserId, teamId);
         }
 
@@ -62,6 +70,7 @@ exports.callback = (req, res) => {
 
         function failureRedirect (error) {
             const message = error.message || 'slack_callback_failed';
+            logger.error(message);
             res.redirect('/#' + querystring.stringify({ error: message }));
         }
     }

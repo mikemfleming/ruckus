@@ -16,7 +16,7 @@ module.exports = function (app) {
 	  failureFlash : true,
 	};
 
-	app.get('/', (req, res) => res.render('index.ejs'));
+	app.get('/', localAuth.home);
 
 	app.get(config.LOGIN_URL, localAuth.login);
 	app.post(config.LOGIN_URL, passport.authenticate('local-login', passportOptions));

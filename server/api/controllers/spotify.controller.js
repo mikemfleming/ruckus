@@ -2,6 +2,8 @@
 
 const axios = require('axios');
 
+const logger = require('../../../logger');
+
 const slack = require('../../util/slack.util');
 const spotifyAuth = require('../../auth/spotify.auth');
 
@@ -19,20 +21,12 @@ exports.add = function (trackId, account) {
   };
 
   axios(config)
-    .then(x => console.log('~~~~~~~~~~~~~~ added track'))
+    .then(() => logger.info('ADDED TRACK'))
     .catch((error) => {
-      console.log('spotify ctrl error adding track', error.response.status)
+      logger.error(error)
       if (error.response.status === 401) {
-        console.log('❤️ token expired, trying again')
+        logger.warn('ACCESS TOKEN EXPIRED');
         spotifyAuth.refreshToken(account.userId)
-        //   .then(addOnce)
       }
     });
 };
-
-function addOnce (config, token) {
-  config.headers['Content-Type'] = 'Bearer ' + token;
-  return axios(config)
-    .then((res) => res.data)
-    .catch((err) => console.log('~~~~~~~~~~~~~~ retry failed'))
-}

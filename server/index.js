@@ -6,13 +6,13 @@ const app = express();
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const flash = require('connect-flash');
-const morgan = require('morgan');
 const session = require('express-session');
 const RedisStore = require('connect-redis')(session);
 const redisClient = require('redis').createClient();
 const passport = require('passport');
 const mongoose = require('mongoose');
 const helmet = require('helmet');
+const pino = require('express-pino-logger')({ logger: require('../logger') });
 
 // required files
 const api = require('./api');
@@ -26,7 +26,7 @@ exports.listen = function(port) {
   app.use(helmet());
   app.use(bodyParser());
   app.use(cookieParser());
-  app.use(morgan(config.LOG_LEVEL));
+  app.use(pino);
   
   // connect to db
   mongoose.connect(config.MONGO_URL);
@@ -53,10 +53,10 @@ exports.listen = function(port) {
   app.use(passport.session());
   app.use(flash());
 
-  // configure routes
+  // configure client side routes
   require('./routes')(app);
 
-  // API routes
+  // configure API routes
   app.use('/api', api);
 
   app.listen(port, function() {

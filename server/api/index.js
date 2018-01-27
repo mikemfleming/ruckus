@@ -4,7 +4,6 @@ const router = require('express').Router();
 const middleware = require('../middleware');
 
 // API specific middleware
-// router.use(middleware.spy);
 router.use(middleware.filter);
 router.use(middleware.isAuthorized);
 

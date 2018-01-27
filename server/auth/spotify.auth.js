@@ -1,5 +1,6 @@
 'use strict';
 
+const logger = require('../../logger');
 const request = require('request');
 const axios = require('axios');
 
@@ -12,6 +13,8 @@ const SpotifyAccounts = require('../models/spotifyAccounts');
 const stateKey = 'spotify_auth_state'; // confirms req is from spotify
 
 exports.authorize = (req, res) => {
+    logger.info('REDIRECTING TO SPOTIFY OAUTH');
+
     const state = authUtil.generateRandomString(16);
     const query = querystring.stringify({
         response_type: 'code',
@@ -32,6 +35,7 @@ exports.callback = (req, res) => {
     const storedState = req.cookies ? req.cookies[stateKey] : null;
 
     if (!state || state !== storedState) {
+        logger.error('SLACK STATE MISMATCH');
         res.redirect('/#' + querystring.stringify({ error: 'state_mismatch' }));
     } else {
         res.clearCookie(stateKey);
@@ -43,6 +47,8 @@ exports.callback = (req, res) => {
         
 
         function getSpotifyTokens (authorization_code) {
+            logger.info('GETTING SLACK DETAILS');
+
             const options = {
                 url: 'https://accounts.spotify.com/api/token',
                 method: 'post',
@@ -59,6 +65,7 @@ exports.callback = (req, res) => {
         }
 
         function saveTokens (res) {
+            logger.info('SAVING SPOTIFY TOKENS');
             // this needs better logic here
             const { access_token, refresh_token } = res.data;
             const currentUserId = req.session.passport.user;
@@ -71,6 +78,7 @@ exports.callback = (req, res) => {
 
         function failureRedirect (error) {
             const message = error.message || 'spotify_callback_failed';
+            logger.error(message)
             res.redirect('/#' + querystring.stringify({ error: message }));
         }
     }
@@ -78,7 +86,8 @@ exports.callback = (req, res) => {
 
 // send this as needed (when messages land)
 exports.refreshToken = function (userId) {
-    console.log('~~~~ refreshing token')
+    logger.info('REFRESHING SPOTIFY TOKEN');
+
     return SpotifyAccounts.findOne({ userId })
         .then((account) => {
             const options = {
@@ -96,10 +105,9 @@ exports.refreshToken = function (userId) {
 
             return axios(options)
                 .then((res) => {
-                    // console.log('refreshToken fn success 🏔', res.data)
                     const accessToken = res.data.access_token;
-                    account.update({ accessToken }).then(x => console.log(x))
-                }) // start here
-                .catch((error) => console.log('refreshToken fn error', error.response.data))
+                    account.update({ accessToken }).then(() => logger.info(`SAVED ACCESS TOKEN FOR USER ${userId}`))
+                })
+                .catch((error) => logger.error(error))
         })
 };
