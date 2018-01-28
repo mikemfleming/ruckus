@@ -6,35 +6,38 @@ const localAuth = require('./auth/local.auth');
 const slackAuth = require('./auth/slack.auth');
 const spotifyAuth = require('./auth/spotify.auth');
 const middleware = require('./middleware');
-const config = require('../config/main.config');
+const { ENDPOINTS } = require('../config/main.config');
+const api = require('./api');
 
 module.exports = function (app) {
 
 	const passportOptions = {
-	  successRedirect : config.PROFILE_URL,
-	  failureRedirect : config.LOGOUT_URL,
+	  successRedirect : ENDPOINTS.PROFILE,
+	  failureRedirect : ENDPOINTS.LOGOUT,
 	  failureFlash : true,
 	};
 
+	// views
 	app.get('/', localAuth.home);
+	app.get(ENDPOINTS.LOGIN, localAuth.login);
+	app.post(ENDPOINTS.LOGIN, passport.authenticate('local-login', passportOptions));
 
-	app.get(config.LOGIN_URL, localAuth.login);
-	app.post(config.LOGIN_URL, passport.authenticate('local-login', passportOptions));
+	app.get(ENDPOINTS.SIGNUP, localAuth.signup);
+	app.post(ENDPOINTS.SIGNUP, passport.authenticate('local-signup', passportOptions));
 
-	app.get(config.SIGNUP_URL, localAuth.signup);
-	app.post(config.SIGNUP_URL, passport.authenticate('local-signup', passportOptions));
+	app.get(ENDPOINTS.PROFILE, middleware.isLoggedIn, localAuth.profile);
+	app.get(ENDPOINTS.LOGOUT, localAuth.logout);
 
-	app.get(config.PROFILE_URL, middleware.isLoggedIn, localAuth.profile);
+	// slack oauth
+	app.get(ENDPOINTS.SLACK.ROOT, middleware.isLoggedIn, localAuth.authorizeSlack);
+	app.get(ENDPOINTS.SLACK.REDIRECT, middleware.isLoggedIn, slackAuth.authorize);
+	app.get(ENDPOINTS.SLACK.CALLBACK, middleware.isLoggedIn, slackAuth.callback);
 
-	app.get(config.LOGOUT_URL, localAuth.logout);
+	// spotify oauth
+	app.get(ENDPOINTS.SPOTIFY.ROOT, middleware.isLoggedIn, localAuth.authorizeSpotify);
+	app.get(ENDPOINTS.SPOTIFY.REDIRECT, middleware.isLoggedIn, spotifyAuth.authorize);
+	app.get(ENDPOINTS.SPOTIFY.CALLBACK, middleware.isLoggedIn, spotifyAuth.callback);
 
-	// authorize Slack for team info
-	app.get(config.AUTHORIZE_SLACK_ROOT_URL, middleware.isLoggedIn, localAuth.authorizeSlack);
-	app.get(config.AUTHORIZE_SLACK_REDIRECT_URL, middleware.isLoggedIn, slackAuth.authorize);
-	app.get(config.AUTHORIZE_SLACK_CALLBACK_URL, middleware.isLoggedIn, slackAuth.callback);
-
-	// authorize Spotify for tokens
-	app.get(config.AUTHORIZE_SPOTIFY_ROOT_URL, middleware.isLoggedIn, localAuth.authorizeSpotify);
-	app.get(config.AUTHORIZE_SPOTIFY_REDIRECT_URL, middleware.isLoggedIn, spotifyAuth.authorize);
-	app.get(config.AUTHORIZE_SPOTIFY_CALLBACK_URL, middleware.isLoggedIn, spotifyAuth.callback);
+	// api
+	app.use(ENDPOINTS.API, api);
 };

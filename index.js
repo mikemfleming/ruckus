@@ -53,6 +53,6 @@ app.use(flash());
 // configure client side routes
 require('./server/routes')(app);
 
-app.listen(8888, function() {
-  console.log(`🐶  Ruckus is on port 8888!`);
+app.listen(config.PORT, function() {
+  console.log(`🐶  Ruckus is on port ${config.PORT}!`);
 });

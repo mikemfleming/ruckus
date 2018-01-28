@@ -5,7 +5,7 @@ const logger = require('../../logger');
 const querystring = require('querystring');
 const axios = require('axios');
 
-const config = require('../../config/main.config');
+const { SLACK, ENDPOINTS } = require('../../config/main.config');
 const authUtil = require('../util/auth.util');
 const SlackAccounts = require('../models/slackAccounts');
 
@@ -16,9 +16,9 @@ exports.authorize = (req, res) => {
 
     const state = authUtil.generateRandomString(16);
     const query = querystring.stringify({
-      client_id: config.SLACK_CLIENT_ID,
-      redirect_uri: config.SLACK_REDIRECT_URI,
-      scope: config.SLACK_SCOPE,
+      client_id: SLACK.CLIENT_ID,
+      redirect_uri: ENDPOINTS.SLACK.REDIRECT_URL,
+      scope: SLACK.SCOPE,
       state: state,
     });
 
@@ -47,10 +47,10 @@ exports.callback = (req, res) => {
             logger.info('GETTING SLACK DETAILS');
             
             const params = {
-                client_id: config.SLACK_CLIENT_ID,
-                client_secret: config.SLACK_CLIENT_SECRET,
+                client_id: SLACK.CLIENT_ID,
+                client_secret: SLACK.CLIENT_SECRET,
                 code: authorization_code,
-                redirect_uri: config.SLACK_REDIRECT_URI,
+                redirect_uri: ENDPOINTS.SLACK.REDIRECT_URL
             };
 
             return axios.get('https://slack.com/api/oauth.access', { params });
@@ -65,7 +65,7 @@ exports.callback = (req, res) => {
         }
 
         function successRedirect () {
-            res.redirect(config.AUTHORIZE_SPOTIFY_ROOT_URL);
+            res.redirect(ENDPOINTS.SPOTIFY.REDIRECT_URL);
         }
 
         function failureRedirect (error) {

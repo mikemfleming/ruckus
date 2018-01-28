@@ -3,7 +3,6 @@
 const LocalStrategy = require('passport-local');
 
 const User = require('../server/models/users');
-const config = require('./main.config');
 
 module.exports = (passport) => {
 

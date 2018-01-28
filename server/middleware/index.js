@@ -1,13 +1,13 @@
 'use strict';
 
 const logger = require('../../logger');
-const config = require('../../config/main.config');
+const { SLACK } = require('../../config/main.config');
 
 exports.isAuthorized = (req, res, next) => {
   logger.info('CHECKING AUTHORIZATION');
 
   // this is where we confirm this request came from slack
-  if (req.body.token !== config.SLACK_VERIFICATION_TOKEN) {
+  if (req.body.token !== SLACK.VERIFICATION_TOKEN) {
     logger.error('UNAUTHORIZED');
     next('Required: Slack Verification Token\n');
   } else {

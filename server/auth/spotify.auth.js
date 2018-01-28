@@ -7,7 +7,7 @@ const axios = require('axios');
 const querystring = require('querystring');
 
 const authUtil = require('../util/auth.util');
-const config = require('../../config/main.config');
+const { SPOTIFY, ENDPOINTS } = require('../../config/main.config');
 const SpotifyAccounts = require('../models/spotifyAccounts');
 
 const stateKey = 'spotify_auth_state'; // confirms req is from spotify
@@ -18,9 +18,9 @@ exports.authorize = (req, res) => {
     const state = authUtil.generateRandomString(16);
     const query = querystring.stringify({
         response_type: 'code',
-        client_id: config.SPOTIFY_CLIENT_ID,
-        scope: config.SPOTIFY_SCOPE,
-        redirect_uri: config.SPOTIFY_REDIRECT_URI,
+        client_id: SPOTIFY.CLIENT_ID,
+        scope: SPOTIFY.SCOPE,
+        redirect_uri: ENDPOINTS.SPOTIFY.REDIRECT_URL,
         state: state,
     });
 
@@ -55,10 +55,10 @@ exports.callback = (req, res) => {
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                 params: {
                     code: authorization_code,
-                    redirect_uri: config.SPOTIFY_REDIRECT_URI,
+                    redirect_uri: ENDPOINTS.SPOTIFY.REDIRECT_URL,
                     grant_type: 'authorization_code'
                 },
-                headers: { 'Authorization': 'Basic ' + (new Buffer(config.SPOTIFY_CLIENT_ID + ':' + config.SPOTIFY_CLIENT_SECRET).toString('base64')) }
+                headers: { 'Authorization': 'Basic ' + (new Buffer(SPOTIFY.CLIENT_ID + ':' + SPOTIFY.CLIENT_SECRET).toString('base64')) }
             };
 
             return axios(options) // spotify doesn't like .get?
@@ -73,7 +73,7 @@ exports.callback = (req, res) => {
         }
 
         function successRedirect () {
-            res.redirect(config.PROFILE_URL);
+            res.redirect(ENDPOINTS.PROFILE);
         }
 
         function failureRedirect (error) {
@@ -94,7 +94,7 @@ exports.refreshToken = function (userId) {
                 method: 'post',
                 url: 'https://accounts.spotify.com/api/token',
                 headers: {
-                    'Authorization': 'Basic ' + (new Buffer(config.SPOTIFY_CLIENT_ID + ':' + config.SPOTIFY_CLIENT_SECRET).toString('base64')),
+                    'Authorization': 'Basic ' + (new Buffer(SPOTIFY.CLIENT_ID + ':' + SPOTIFY.CLIENT_SECRET).toString('base64')),
                 },
                 params: {
                     grant_type: 'refresh_token',
