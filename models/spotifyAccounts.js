@@ -1,7 +1,7 @@
 'use strict';
 
 const mongoose = require('mongoose');
-const logger = require('../../logger');
+const logger = require('../logger');
 
 const spotifyAccountSchema = mongoose.Schema({
     userId: { type: String, index: { unique: true } },

@@ -26,13 +26,3 @@ exports.logout = (req, res) => {
   req.logout();
   res.redirect('/');
 };
-
-exports.authorizeSlack = (req, res) => {
-	logger.info('RENDERING SLACK AUTHORIZATION PAGE');
-	res.render('slack.ejs');
-};
-
-exports.authorizeSpotify = (req, res) => {
-	logger.info('RENDERING SPOTIFY AUTHORIZATION PAGE');
-	res.render('spotify.ejs');
-};

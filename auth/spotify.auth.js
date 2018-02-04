@@ -1,13 +1,13 @@
 'use strict';
 
-const logger = require('../../logger');
+const logger = require('../logger');
 const request = require('request');
 const axios = require('axios');
 
 const querystring = require('querystring');
 
 const authUtil = require('../util/auth.util');
-const { SPOTIFY, ENDPOINTS } = require('../../config/main.config');
+const { SPOTIFY, ENDPOINTS } = require('../config/main.config');
 const SpotifyAccounts = require('../models/spotifyAccounts');
 
 const stateKey = 'spotify_auth_state'; // confirms req is from spotify

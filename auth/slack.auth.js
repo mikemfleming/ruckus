@@ -1,11 +1,11 @@
 'use strict';
 
-const logger = require('../../logger');
+const logger = require('../logger');
 
 const querystring = require('querystring');
 const axios = require('axios');
 
-const { SLACK, ENDPOINTS } = require('../../config/main.config');
+const { SLACK, ENDPOINTS } = require('../config/main.config');
 const authUtil = require('../util/auth.util');
 const SlackAccounts = require('../models/slackAccounts');
 

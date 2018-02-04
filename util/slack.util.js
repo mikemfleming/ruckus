@@ -2,7 +2,7 @@
 
 const request = require('request');
 
-const { SLACK } = require('../../config/main.config');
+const { SLACK } = require('../config/main.config');
 
 exports.respond = () => {
   const options = {

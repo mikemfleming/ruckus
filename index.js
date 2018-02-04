@@ -3,6 +3,7 @@
 require('dotenv').config();
 
 const express = require('express');
+const router = require('express').Router();
 const app = express();
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
@@ -28,7 +29,7 @@ app.use(pino);
 mongoose.connect(config.MONGO_URL);
 
 // configure passport
-require('./config/passport.js')(passport);
+require('./auth/passport.auth')(passport);
 
 // configure redis options
 const sessionOptions = {
@@ -50,8 +51,12 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
 
+// configure api routes
+app.use('/api', router);
+require('./routes/api')(router);
+
 // configure client side routes
-require('./server/routes')(app);
+require('./routes/client')(app);
 
 app.listen(config.PORT, function() {
   console.log(`🐶  Ruckus is on port ${config.PORT}!`);

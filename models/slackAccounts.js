@@ -1,6 +1,6 @@
 'use strict';
 
-const logger = require('../../logger');
+const logger = require('../logger');
 const mongoose = require('mongoose');
 
 const slackAccountSchema = mongoose.Schema({

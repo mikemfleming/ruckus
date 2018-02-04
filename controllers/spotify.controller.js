@@ -2,10 +2,10 @@
 
 const axios = require('axios');
 
-const logger = require('../../../logger');
+const logger = require('../logger');
 
-const slack = require('../../util/slack.util');
-const spotifyAuth = require('../../auth/spotify.auth');
+const slack = require('../util/slack.util');
+const spotifyAuth = require('../auth/spotify.auth');
 
 exports.add = function (trackId, account) {
   const config = {
