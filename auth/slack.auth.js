@@ -1,18 +1,18 @@
 'use strict';
 
-const logger = require('../logger');
+const log = require('../logger');
 
 const querystring = require('querystring');
 const axios = require('axios');
 
 const { SLACK, ENDPOINTS } = require('../config/main.config');
 const authUtil = require('../util/auth.util');
-const SlackAccounts = require('../models/slackAccounts');
+const Users = require('../models/users.model');
 
 const stateKey = 'slack_auth_state'; // confirms req is from slack
 
 exports.authorize = (req, res) => {
-    logger.info('REDIRECTING TO SLACK OAUTH');
+    log.info('REDIRECTING TO SLACK OAUTH');
 
     const state = authUtil.generateRandomString(16);
     const query = querystring.stringify({
@@ -30,9 +30,8 @@ exports.authorize = (req, res) => {
 exports.callback = (req, res) => {
     const { code, state } = req.query;
     const storedState = req.cookies ? req.cookies[stateKey] : null;
-
     if (!state || state !== storedState) {
-        logger.error('SLACK STATE MISMATCH');
+        log.error(req, 'SLACK STATE MISMATCH');
         res.redirect('/#' + querystring.stringify({ error: 'state_mismatch' }));
     } else {
         res.clearCookie(stateKey);
@@ -44,7 +43,7 @@ exports.callback = (req, res) => {
         
 
         function getSlackDetails (authorization_code) {
-            logger.info('GETTING SLACK DETAILS');
+            log.info('GETTING SLACK DETAILS');
             
             const params = {
                 client_id: SLACK.CLIENT_ID,
@@ -58,19 +57,20 @@ exports.callback = (req, res) => {
 
         function saveTeam (res) {
             const teamId = (res.data && res.data.team) ? res.data.team.id : null;
-            const currentUserId = req.session.passport.user;
+            const _id = req.session.passport.user;
             if (!teamId) throw new Error('Team field not present in Slack response.');
-            logger.info('SAVING SLACK TEAM');
-            return SlackAccounts.addNewAccount(currentUserId, teamId);
+            return Users.update({ _id }, { $set: { 'slack.teamId': teamId } })
+                .then(() => log.info('UPDATED USER WITH SLACK TEAM'));
         }
 
         function successRedirect () {
-            res.redirect(ENDPOINTS.SPOTIFY.REDIRECT_URL);
+            log.info('REDIRECTING TO SPOTIFY OAUTH');
+            res.redirect(ENDPOINTS.SPOTIFY.ROOT);
         }
 
         function failureRedirect (error) {
             const message = error.message || 'slack_callback_failed';
-            logger.error(message);
+            log.error(message);
             res.redirect('/#' + querystring.stringify({ error: message }));
         }
     }

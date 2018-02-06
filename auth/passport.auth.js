@@ -1,8 +1,9 @@
 'use strict';
 
 const LocalStrategy = require('passport-local');
+const log = require('../logger');
 
-const User = require('../models/users');
+const User = require('../models/users.model');
 
 module.exports = (passport) => {
 

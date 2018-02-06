@@ -1,8 +1,7 @@
 'use strict';
 
-const tracks = require('../controllers/spotify.controller');
-const SlackAccounts = require('../models/slackAccounts');
-const SpotifyAccounts = require('../models/spotifyAccounts');
+const tracks = require('./spotify.controller');
+const Users = require('../models/users.model');
 
 const logger = require('../logger');
 
@@ -16,16 +15,12 @@ module.exports = (req, res) => {
 
     const trackId = spotifyTrack[1];
 
-    SlackAccounts.find({ teamId })
+    Users.find({ 'slack.teamId': teamId })
       .then((accounts) => {
+        if (!accounts) throw new Error(`FAILED TO FIND SLACK TEAM MEMBERS: ${teamId}`);
+
         accounts.forEach((account) => {
-          const userId = account.userId;
-
-          SpotifyAccounts.findOne({ userId })
-            .then((account) => {
-              tracks.add(trackId, account)
-            });
-
+          tracks.add(trackId, account);
         });
       })
 

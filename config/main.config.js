@@ -29,7 +29,7 @@ module.exports = (() => {
   const SPOTIFY = {
     SCOPE: 'playlist-modify-public',
     CLIENT_ID: process.env.SPOTIFY_CLIENT_ID,
-    CLIENT_SECRET: process.env.CLIENT_SECRET
+    CLIENT_SECRET: process.env.SPOTIFY_CLIENT_SECRET
   };
 
   const ENDPOINTS = {

@@ -25,7 +25,7 @@ app.use(bodyParser());
 app.use(cookieParser());
 app.use(pino);
 
-//connect to mongo
+// connect to mongo
 mongoose.connect(config.MONGO_URL);
 
 // configure passport

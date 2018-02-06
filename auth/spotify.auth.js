@@ -1,6 +1,6 @@
 'use strict';
 
-const logger = require('../logger');
+const log = require('../logger');
 const request = require('request');
 const axios = require('axios');
 
@@ -8,12 +8,12 @@ const querystring = require('querystring');
 
 const authUtil = require('../util/auth.util');
 const { SPOTIFY, ENDPOINTS } = require('../config/main.config');
-const SpotifyAccounts = require('../models/spotifyAccounts');
+const Users = require('../models/users.model');
 
 const stateKey = 'spotify_auth_state'; // confirms req is from spotify
 
 exports.authorize = (req, res) => {
-    logger.info('REDIRECTING TO SPOTIFY OAUTH');
+    log.info('REDIRECTING TO SPOTIFY OAUTH');
 
     const state = authUtil.generateRandomString(16);
     const query = querystring.stringify({
@@ -35,7 +35,8 @@ exports.callback = (req, res) => {
     const storedState = req.cookies ? req.cookies[stateKey] : null;
 
     if (!state || state !== storedState) {
-        logger.error('SLACK STATE MISMATCH');
+        log.error('SPOTIFY STATE MISMATCH');
+        console.log(state, storedState)
         res.redirect('/#' + querystring.stringify({ error: 'state_mismatch' }));
     } else {
         res.clearCookie(stateKey);
@@ -47,7 +48,7 @@ exports.callback = (req, res) => {
         
 
         function getSpotifyTokens (authorization_code) {
-            logger.info('GETTING SLACK DETAILS');
+            log.info('GETTING SPOTIFY DETAILS');
 
             const options = {
                 url: 'https://accounts.spotify.com/api/token',
@@ -65,11 +66,11 @@ exports.callback = (req, res) => {
         }
 
         function saveTokens (res) {
-            logger.info('SAVING SPOTIFY TOKENS');
             // this needs better logic here
             const { access_token, refresh_token } = res.data;
-            const currentUserId = req.session.passport.user;
-            return SpotifyAccounts.saveTokens(currentUserId, access_token, refresh_token);
+            const _id = req.session.passport.user;
+            return Users.update({ _id }, { $set : { 'spotify.accessToken': access_token, 'spotify.refreshToken': refresh_token } })
+                .then(() => log.info('SAVED SPOTIFY TOKENS'));
         }
 
         function successRedirect () {
@@ -78,17 +79,17 @@ exports.callback = (req, res) => {
 
         function failureRedirect (error) {
             const message = error.message || 'spotify_callback_failed';
-            logger.error(message)
+            log.error(message)
             res.redirect('/#' + querystring.stringify({ error: message }));
         }
     }
 };
 
 // send this as needed (when messages land)
-exports.refreshToken = function (userId) {
-    logger.info('REFRESHING SPOTIFY TOKEN');
+exports.refreshToken = function (_id) {
+    log.info('REFRESHING SPOTIFY TOKEN');
 
-    return SpotifyAccounts.findOne({ userId })
+    return Users.findOne({ _id })
         .then((account) => {
             const options = {
                 method: 'post',
@@ -98,7 +99,7 @@ exports.refreshToken = function (userId) {
                 },
                 params: {
                     grant_type: 'refresh_token',
-                    refresh_token: account.refreshToken
+                    refresh_token: account.spotify.refreshToken
                 },
                 json: true
             };
@@ -106,8 +107,9 @@ exports.refreshToken = function (userId) {
             return axios(options)
                 .then((res) => {
                     const accessToken = res.data.access_token;
-                    account.update({ accessToken }).then(() => logger.info(`SAVED ACCESS TOKEN FOR USER ${userId}`))
+                    Users.update({ _id }, { $set: { 'spotify.accessToken': accessToken } })
+                        .then(() => log.info(`SAVED ACCESS TOKEN FOR USER ${_id}`))
                 })
-                .catch((error) => logger.error(error))
+                .catch((error) => log.error(error))
         })
 };
