@@ -5,7 +5,7 @@ const bcrypt = require('bcrypt');
 const log = require('../logger');
 
 const spotifySchema = mongoose.Schema({
-	// userId: { type: String, index: { unique: true } },
+	userId: { type: String, index: { unique: true } },
     accessToken: String,
     refreshToken: String,
 });
@@ -45,6 +45,17 @@ userSchema.statics.captureSlackDetails = function (details) {
     const updates = {
         'slack.userId': details.userId,
         'slack.teamId': details.teamId
+    };
+    return this.update(userToUpdate, updates);
+};
+
+userSchema.statics.captureSpotifyDetails = function (details) {
+    log.info('WRITING SPOTIFY DETAILS TO RUCKUS USER');
+    const userToUpdate = { _id: details.ruckusUserId };
+    const updates = {
+        'spotify.accessToken': details.accessToken,
+        'spotify.refreshToken': details.refreshToken,
+        'spotify.userId': details.userId
     };
     return this.update(userToUpdate, updates);
 };

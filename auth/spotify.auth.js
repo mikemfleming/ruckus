@@ -3,6 +3,7 @@
 const log = require('../logger');
 const request = require('request');
 const axios = require('axios');
+const apiUtil = require('../util/api.util');
 
 const querystring = require('querystring');
 
@@ -31,12 +32,14 @@ exports.authorize = (req, res) => {
 };
 
 exports.callback = (req, res) => {
+    const ruckusUserId = req.session && req.session.passport ? req.session.passport.user : null;
+    if (!ruckusUserId) throw new Error('RUCKUS USER ID NOT PRESENT IN SESSION');
+
     const { code, state } = req.query;
     const storedState = req.cookies ? req.cookies[stateKey] : null;
 
     if (!state || state !== storedState) {
         log.error('SPOTIFY STATE MISMATCH');
-        console.log(state, storedState)
         res.redirect('/#' + querystring.stringify({ error: 'state_mismatch' }));
     } else {
         res.clearCookie(stateKey);
@@ -46,7 +49,7 @@ exports.callback = (req, res) => {
             .then(successRedirect)
             .catch(failureRedirect);
         
-
+        // TODO: get spotify user id and save it here
         function getSpotifyTokens (authorization_code) {
             log.info('GETTING SPOTIFY DETAILS');
 
@@ -62,15 +65,16 @@ exports.callback = (req, res) => {
                 headers: { 'Authorization': 'Basic ' + (new Buffer(SPOTIFY.CLIENT_ID + ':' + SPOTIFY.CLIENT_SECRET).toString('base64')) }
             };
 
-            return axios(options) // spotify doesn't like .get?
+            return apiUtil.request(options) // spotify doesn't like .get?
         }
 
-        function saveTokens (res) {
-            // this needs better logic here
-            const { access_token, refresh_token } = res.data;
-            const _id = req.session.passport.user;
-            return Users.update({ _id }, { $set : { 'spotify.accessToken': access_token, 'spotify.refreshToken': refresh_token } })
-                .then(() => log.info('SAVED SPOTIFY TOKENS'));
+        function saveTokens (data) {
+            const accessToken = data.access_token;
+            const refreshToken = data.refresh_token;
+
+            if (!accessToken || !refreshToken) throw new Error('Tokens were not present in Spotify response.');
+
+            return Users.captureSpotifyDetails({ ruckusUserId, accessToken, refreshToken });
         }
 
         function successRedirect () {
@@ -78,8 +82,8 @@ exports.callback = (req, res) => {
         }
 
         function failureRedirect (error) {
+            log.error(error);
             const message = error.message || 'spotify_callback_failed';
-            log.error(message)
             res.redirect('/#' + querystring.stringify({ error: message }));
         }
     }

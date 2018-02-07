@@ -3,7 +3,6 @@
 const log = require('../logger');
 
 const querystring = require('querystring');
-const axios = require('axios');
 
 const apiUtil = require('../util/api.util');
 const { SLACK, ENDPOINTS } = require('../config/main.config');
@@ -67,7 +66,6 @@ exports.callback = function (req, res) {
         function saveTeam (data) {
             const slackTeamId = data.team ? data.team.id : null;
             const slackUserId = data.user ? data.user.id : null;
-            console.log(data, slackUserId, slackTeamId)
 
             if (!slackTeamId || !slackUserId) throw new Error('IDs not present in Slack response.');
 
