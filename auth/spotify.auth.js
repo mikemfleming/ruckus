@@ -107,8 +107,8 @@ exports.refreshToken = function (_id) {
             return axios(options)
                 .then((res) => {
                     const accessToken = res.data.access_token;
-                    Users.update({ _id }, { $set: { 'spotify.accessToken': accessToken } })
-                        .then(() => log.info(`SAVED ACCESS TOKEN FOR USER ${_id}`))
+                    return Users.update({ _id }, { $set: { 'spotify.accessToken': accessToken } })
+                        .then(() => accessToken);
                 })
                 .catch((error) => log.error(error))
         })

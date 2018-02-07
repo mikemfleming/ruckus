@@ -23,49 +23,17 @@ const userSchema = mongoose.Schema({
     slack: slackSchema
 });
 
-userSchema.methods.generateHash = (value) => {
+userSchema.methods.generateHash = function (value) {
     return bcrypt.hashSync(value, bcrypt.genSaltSync(12), null);
 };
 
-userSchema.methods.validPassword = (password) => {
+userSchema.methods.validPassword = function (password) {
     return bcrypt.compareSync(password, this.password);
 };
 
-// userSchema.statics.saveSpotifyTokens = function (userId, accessToken, refreshToken) {
-// 	logger.info('SAVING SPOTIFY TOKENS');
+userSchema.statics.getSlackMembers = function (id) {
+    return this.find({ 'slack.teamId': id });
+};
 
-// 	const newSpotifyAccount = new this();
-// 	newSpotifyAccount.userId = userId;
-// 	newSpotifyAccount.accessToken = accessToken;
-// 	newSpotifyAccount.refreshToken = refreshToken;
-// 	return newSpotifyAccount.save();
-// };
-
-// userSchema.statics.addNewSlackUser = function (userId, teamId) {
-// 	logger.info(`CREATING NEW ACCOUNT FOR user ${userId} on team ${teamId}`);
-// 	newSlackAccount.userId = userId;
-// 	newSlackAccount.teamId = teamId;
-// 	return newSlackAccount.save();
-// };
 
 module.exports = mongoose.model('User', userSchema);
-
-
-// let UserSchema = new Schema({
-//   //...
-//   statuses: {
-//     online: {
-//       type: Boolean,
-//       default: true
-//     },
-//     verified: {
-//       type: Boolean,
-//       default: false
-//     },
-//     banned: {
-//       type: Boolean,
-//       default: false
-//     }
-//   },
-//   //...
-// })
