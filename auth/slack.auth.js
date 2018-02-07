@@ -5,13 +5,14 @@ const log = require('../logger');
 const querystring = require('querystring');
 const axios = require('axios');
 
+const apiUtil = require('../util/api.util');
 const { SLACK, ENDPOINTS } = require('../config/main.config');
 const authUtil = require('../util/auth.util');
 const Users = require('../models/users.model');
 
 const stateKey = 'slack_auth_state'; // confirms req is from slack
 
-exports.authorize = (req, res) => {
+exports.authorize = function (req, res) {
     log.info('REDIRECTING TO SLACK OAUTH');
 
     const state = authUtil.generateRandomString(16);
@@ -27,9 +28,13 @@ exports.authorize = (req, res) => {
     res.redirect(`https://slack.com/oauth/authorize?${query}`);
 };
 
-exports.callback = (req, res) => {
+exports.callback = function (req, res) {
+    const ruckusUserId = req.session && req.session.passport ? req.session.passport.user : null;
+    if (!ruckusUserId) throw new Error('RUCKUS USER ID NOT PRESENT IN SESSION');
+
     const { code, state } = req.query;
     const storedState = req.cookies ? req.cookies[stateKey] : null;
+    
     if (!state || state !== storedState) {
         log.error(req, 'SLACK STATE MISMATCH');
         res.redirect('/#' + querystring.stringify({ error: 'state_mismatch' }));
@@ -44,23 +49,29 @@ exports.callback = (req, res) => {
 
         function getSlackDetails (authorization_code) {
             log.info('GETTING SLACK DETAILS');
-            
-            const params = {
-                client_id: SLACK.CLIENT_ID,
-                client_secret: SLACK.CLIENT_SECRET,
-                code: authorization_code,
-                redirect_uri: ENDPOINTS.SLACK.REDIRECT_URL
+
+            const options = {
+                url: 'https://slack.com/api/oauth.access',
+                method: 'GET',
+                params: {
+                    client_id: SLACK.CLIENT_ID,
+                    client_secret: SLACK.CLIENT_SECRET,
+                    code: authorization_code,
+                    redirect_uri: ENDPOINTS.SLACK.REDIRECT_URL
+                }
             };
 
-            return axios.get('https://slack.com/api/oauth.access', { params });
+            return apiUtil.request(options);
         }
 
-        function saveTeam (res) {
-            const teamId = (res.data && res.data.team) ? res.data.team.id : null;
-            const _id = req.session.passport.user;
-            if (!teamId) throw new Error('Team field not present in Slack response.');
-            return Users.update({ _id }, { $set: { 'slack.teamId': teamId } })
-                .then(() => log.info('UPDATED USER WITH SLACK TEAM'));
+        function saveTeam (data) {
+            const slackTeamId = data.team ? data.team.id : null;
+            const slackUserId = data.user ? data.user.id : null;
+            console.log(data, slackUserId, slackTeamId)
+
+            if (!slackTeamId || !slackUserId) throw new Error('IDs not present in Slack response.');
+
+            return Users.captureSlackDetails({ ruckusUserId, slackTeamId, slackUserId });
         }
 
         function successRedirect () {
@@ -69,8 +80,8 @@ exports.callback = (req, res) => {
         }
 
         function failureRedirect (error) {
+            log.error(error);
             const message = error.message || 'slack_callback_failed';
-            log.error(message);
             res.redirect('/#' + querystring.stringify({ error: message }));
         }
     }
