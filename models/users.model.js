@@ -5,7 +5,7 @@ const bcrypt = require('bcrypt');
 const log = require('../logger');
 
 const spotifySchema = mongoose.Schema({
-	userId: { type: String, index: { unique: true } },
+	userId: String,
     accessToken: String,
     refreshToken: String,
 });
@@ -39,25 +39,22 @@ userSchema.statics.getSlackMembers = function (id) {
     return this.find({ 'slack.teamId': id });
 };
 
-userSchema.statics.captureSlackDetails = function (details) {
+userSchema.methods.addSlackDetails = function (userId, teamId) {
     log.info('WRITING SLACK DETAILS TO RUCKUS USER');
-    const userToUpdate = { _id: details.ruckusUserId };
-    const updates = {
-        'slack.userId': details.userId,
-        'slack.teamId': details.teamId
-    };
-    return this.update(userToUpdate, updates);
+    this.slack = { userId, teamId };
+    this.save();
 };
 
-userSchema.statics.captureSpotifyDetails = function (details) {
+userSchema.methods.addSpotifyTokens = function (accessToken, refreshToken) {
     log.info('WRITING SPOTIFY DETAILS TO RUCKUS USER');
-    const userToUpdate = { _id: details.ruckusUserId };
-    const updates = {
-        'spotify.accessToken': details.accessToken,
-        'spotify.refreshToken': details.refreshToken,
-        'spotify.userId': details.userId
-    };
-    return this.update(userToUpdate, updates);
+    this.spotify = { accessToken, refreshToken };
+    this.save();
+};
+
+userSchema.methods.updateAccessToken = function (accessToken) {
+    log.info('UPDATING SPOTIFY ACCESS TOKEN');
+    this.spotify.accessToken = accessToken;
+    this.save();
 };
 
 

@@ -6,7 +6,7 @@ const spotifyAuth = require('../auth/spotify.auth');
 const apiUtil = require('../util/api.util');
 
 exports.addToPlaylist = function (trackId, account) {
-
+console.log(account)
   // TODO: capture spotify user id and the playlist they want to add to
   const options = {
     url: 'https://api.spotify.com/v1/users/1228406874/playlists/4qIaLCTPEef0Zsy8G4deZz/tracks',

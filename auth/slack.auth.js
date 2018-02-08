@@ -69,7 +69,8 @@ exports.callback = function (req, res) {
 
             if (!slackTeamId || !slackUserId) throw new Error('IDs not present in Slack response.');
 
-            return Users.captureSlackDetails({ ruckusUserId, slackTeamId, slackUserId });
+            return Users.findById(ruckusUserId)
+                .then((account) => account.addSlackDetails(slackUserId, slackTeamId));
         }
 
         function successRedirect () {
