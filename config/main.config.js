@@ -1,29 +1,78 @@
 'use strict';
 
 module.exports = (() => {
-  const LOG_LEVEL = process.env.LOG_LEVEL || 'production';
-  const PORT = process.env.PORT || 8888;
-  const SLACK_CLIENT_ID = process.env.SLACK_CLIENT_ID;
-  const SLACK_CLIENT_SECRET = process.env.SLACK_CLIENT_SECRET;
-  const SLACK_VERIFICATION_TOKEN = process.env.SLACK_VERIFICATION_TOKEN;
-  const SLACK_BOT_TOKEN = process.env.SLACK_BOT_TOKEN;
-  const SPOTIFY_CLIENT_ID = process.env.SPOTIFY_CLIENT_ID;
-  const SPOTIFY_CLIENT_SECRET = process.env.SPOTIFY_CLIENT_SECRET;
-  const SPOTIFY_REDIRECT_URI = process.env.SPOTIFY_REDIRECT_URI;
-  const MONGO_URL = process.env.MONGO_URL;
-  const SESSION_SECRET = process.env.SESSION_SECRET;
+  const { ENVIRONMENT } = process.env;
+
+  const PORT = process.env.PORT || 8888; // optionally set to heroku's default port
+  const REDIS_PORT = Number(PORT) + 1;
+
+  const LOG_LEVEL = ENVIRONMENT === 'development'
+    ? 'dev'
+    : 'common';
+
+  const SESSION_SECRET = ENVIRONMENT === 'development'
+    ? process.env.SESSION_SECRET_DEV
+    : process.env.SESSION_SECRET_PROD;
+
+  const MONGO_URL = ENVIRONMENT === 'development'
+    ? process.env.MONGO_DEV_URL
+    : process.env.MONGO_PROD_URL;
+
+  const SLACK = {
+    SCOPE: 'identity.basic',
+    CLIENT_ID: process.env.SLACK_CLIENT_ID,
+    CLIENT_SECRET: process.env.SLACK_CLIENT_SECRET,
+    VERIFICATION_TOKEN: process.env.SLACK_VERIFICATION_TOKEN,
+    BOT_TOKEN: process.env.SLACK_BOT_TOKEN
+  };
+
+  const SPOTIFY = {
+    SCOPE: 'playlist-modify-public',
+    CLIENT_ID: process.env.SPOTIFY_CLIENT_ID,
+    CLIENT_SECRET: process.env.SPOTIFY_CLIENT_SECRET
+  };
+
+  const ENDPOINTS = {
+    LOGIN: '/login',
+    SIGNUP: '/signup',
+    PROFILE: '/profile',
+    LOGOUT: '/logout',
+    AUTHORIZE: '/authorize',
+    API: '/api',
+    SLACK: {
+      ROOT: '/authorize/slack',
+      REDIRECT: '/authorize/slack/redirect',
+      CALLBACK: '/authorize/slack/callback',
+      get REDIRECT_URL () {
+        return ENVIRONMENT === 'development'
+          ? `http://localhost:${PORT + this.CALLBACK}`
+          : ' SLACK REDIRECT NOT SET FOR PROD'
+      }
+    },
+    SPOTIFY: {
+      ROOT: '/authorize/spotify',
+      REDIRECT: '/authorize/spotify/redirect',
+      CALLBACK: '/authorize/spotify/callback',
+      get REDIRECT_URL () {
+        return ENVIRONMENT === 'development'
+          ? `http://localhost:${PORT + this.CALLBACK}`
+          : ' SPOTIFY REDIRECT NOT SET FOR PROD'
+      }
+    }
+  };
 
   return {
+    ENVIRONMENT,
     LOG_LEVEL,
     PORT,
-    SLACK_CLIENT_ID,
-    SLACK_CLIENT_SECRET,
-    SLACK_VERIFICATION_TOKEN,
-    SLACK_BOT_TOKEN,
-    SPOTIFY_CLIENT_ID,
-    SPOTIFY_CLIENT_SECRET,
-    SPOTIFY_REDIRECT_URI,
-    MONGO_URL,
+    REDIS_PORT,
     SESSION_SECRET,
+    MONGO_URL,
+
+    SLACK,
+
+    SPOTIFY,
+
+    ENDPOINTS
   };
 })();

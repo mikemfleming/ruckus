@@ -1,12 +1,11 @@
 'use strict';
 
 const LocalStrategy = require('passport-local');
-const SlackStrategy = require('passport-slack').Strategy;
+const log = require('../logger');
 
-const User = require('../server/models/users');
-const config = require('./main.config');
+const User = require('../models/users.model');
 
-module.exports = (passport) => {
+module.exports = function (passport) {
 
   passport.serializeUser(serializeUser);
   passport.deserializeUser(deserializeUser);

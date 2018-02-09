@@ -4,27 +4,40 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon index.js"
+    "start": "node index.js",
+    "test": "snyk test && ./node_modules/mocha/bin/mocha test --recursive",
+    "dev": "./node_modules/.bin/nodemon index.js",
+    "snyk-protect": "snyk protect",
+    "prepare": "npm run snyk-protect",
+    "proxy": "./node_modules/ngrok/bin/ngrok http -subdomain=ruckus 8888"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "axios": "^0.16.2",
     "bcrypt": "^1.0.3",
-    "body-parser": "^1.17.2",
+    "body-parser": "^1.18.2",
     "connect-flash": "^0.1.1",
+    "connect-redis": "^3.3.2",
     "cookie-parser": "^1.4.3",
     "dotenv": "^4.0.0",
     "ejs": "^2.5.7",
-    "express": "^4.15.4",
-    "express-session": "^1.15.5",
-    "mongoose": "^4.11.11",
-    "morgan": "^1.8.2",
+    "express": "^4.16.0",
+    "express-pino-logger": "^3.0.1",
+    "express-session": "^1.15.6",
+    "helmet": "^3.9.0",
+    "mongoose": "^4.11.14",
     "nodemon": "^1.11.0",
     "passport": "^0.4.0",
     "passport-local": "^1.0.0",
-    "passport-slack": "0.0.7",
+    "pino": "^4.10.3",
     "querystring": "^0.2.0",
-    "request": "^2.81.0"
-  }
+    "redis": "^2.8.0",
+    "snyk": "^1.42.7"
+  },
+  "devDependencies": {
+    "mocha": "^4.0.1",
+    "ngrok": "^2.2.23"
+  },
+  "snyk": true
 }
