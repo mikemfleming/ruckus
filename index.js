@@ -62,6 +62,4 @@ require('./routes/api')(router);
 // configure client side routes
 require('./routes/client')(app);
 
-app.listen(PORT, () => {
-  console.log(`🐶  Ruckus is on port ${PORT}!`);
-});
+app.listen(PORT, () => console.log(`🐶  Ruckus is on port ${PORT}!`));

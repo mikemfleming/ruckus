@@ -32,7 +32,7 @@ userSchema.methods.validPassword = (password) => {
   return bcrypt.compareSync(password, this.password);
 };
 
-userSchema.statics.getSlackMembers = (id) => {
+userSchema.statics.getSlackMembers = function (id) {
   log.info('GETTING SLACK MEMBERS');
   return this.find({ 'slack.teamId': id });
 };
