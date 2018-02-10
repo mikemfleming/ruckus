@@ -2,6 +2,8 @@
 
 require('dotenv').config();
 
+const config = require('./config/main.config');
+
 const express = require('express');
 const router = require('express').Router();
 const app = express();
@@ -10,12 +12,11 @@ const cookieParser = require('cookie-parser');
 const flash = require('connect-flash');
 const session = require('express-session');
 const RedisStore = require('connect-redis')(session);
-const redisClient = require('redis').createClient();
+const redisClient = require('redis').createClient(config.REDIS_URL);
 const passport = require('passport');
 const mongoose = require('mongoose');
 const helmet = require('helmet');
 const pino = require('express-pino-logger')({ logger: require('./logger') });
-const config = require('./config/main.config');
 
 mongoose.promise = Promise;
 
@@ -33,8 +34,8 @@ require('./auth/passport.auth')(passport);
 
 // configure redis options
 const sessionOptions = {
-  host: 'localhost',
-  port: config.REDIS_PORT,
+  // host: 'localhost',
+  // port: config.REDIS_PORT,
   client: redisClient,
   ttl: 260
 };

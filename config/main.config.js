@@ -6,6 +6,8 @@ module.exports = (() => {
   const PORT = process.env.PORT || 8888; // optionally set to heroku's default port
   const REDIS_PORT = Number(PORT) + 1;
 
+  const REDIS_URL = process.env.REDIS_URL;
+
   const LOG_LEVEL = ENVIRONMENT === 'development'
     ? 'dev'
     : 'common';
@@ -70,6 +72,8 @@ module.exports = (() => {
     MONGO_URL,
 
     SLACK,
+
+    REDIS_URL,
 
     SPOTIFY,
 
