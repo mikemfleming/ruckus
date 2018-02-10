@@ -1,12 +1,7 @@
-'use strict';
-
 module.exports = (() => {
-  const { ENVIRONMENT } = process.env;
+  const { ENVIRONMENT, REDISTOGO_URL } = process.env;
 
   const PORT = process.env.PORT || 8888; // optionally set to heroku's default port
-  const REDIS_PORT = Number(PORT) + 1;
-
-  const REDIS_URL = process.env.REDIS_URL;
 
   const LOG_LEVEL = ENVIRONMENT === 'development'
     ? 'dev'
@@ -25,13 +20,13 @@ module.exports = (() => {
     CLIENT_ID: process.env.SLACK_CLIENT_ID,
     CLIENT_SECRET: process.env.SLACK_CLIENT_SECRET,
     VERIFICATION_TOKEN: process.env.SLACK_VERIFICATION_TOKEN,
-    BOT_TOKEN: process.env.SLACK_BOT_TOKEN
+    BOT_TOKEN: process.env.SLACK_BOT_TOKEN,
   };
 
   const SPOTIFY = {
     SCOPE: 'playlist-modify-public',
     CLIENT_ID: process.env.SPOTIFY_CLIENT_ID,
-    CLIENT_SECRET: process.env.SPOTIFY_CLIENT_SECRET
+    CLIENT_SECRET: process.env.SPOTIFY_CLIENT_SECRET,
   };
 
   const ENDPOINTS = {
@@ -45,7 +40,7 @@ module.exports = (() => {
       ROOT: '/authorize/slack',
       REDIRECT: '/authorize/slack/redirect',
       CALLBACK: '/authorize/slack/callback',
-      get REDIRECT_URL () {
+      get REDIRECT_URL() {
         return ENVIRONMENT === 'development'
           ? `http://localhost:${PORT + this.CALLBACK}`
           : `https://calm-crag-28252.herokuapp.com${this.CALLBACK}`
@@ -55,7 +50,7 @@ module.exports = (() => {
       ROOT: '/authorize/spotify',
       REDIRECT: '/authorize/spotify/redirect',
       CALLBACK: '/authorize/spotify/callback',
-      get REDIRECT_URL () {
+      get REDIRECT_URL() {
         return ENVIRONMENT === 'development'
           ? `http://localhost:${PORT + this.CALLBACK}`
           : `https://calm-crag-28252.herokuapp.com${this.CALLBACK}`
@@ -67,16 +62,11 @@ module.exports = (() => {
     ENVIRONMENT,
     LOG_LEVEL,
     PORT,
-    REDIS_PORT,
     SESSION_SECRET,
     MONGO_URL,
-
+    REDISTOGO_URL,
     SLACK,
-
-    REDIS_URL,
-
     SPOTIFY,
-
-    ENDPOINTS
+    ENDPOINTS,
   };
 })();
