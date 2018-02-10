@@ -37,19 +37,19 @@ userSchema.statics.getSlackMembers = (id) => {
   return this.find({ 'slack.teamId': id });
 };
 
-userSchema.methods.addSlackDetails = (userId, teamId) => {
+userSchema.methods.addSlackDetails = function (userId, teamId) {
   log.info('WRITING SLACK DETAILS TO RUCKUS USER');
   this.slack = { userId, teamId };
   this.save();
 };
 
-userSchema.methods.addSpotifyTokens = (accessToken, refreshToken) => {
+userSchema.methods.addSpotifyTokens = function (accessToken, refreshToken) {
   log.info('WRITING SPOTIFY DETAILS TO RUCKUS USER');
   this.spotify = { accessToken, refreshToken };
   this.save();
 };
 
-userSchema.methods.updateAccessToken = (accessToken) => {
+userSchema.methods.updateAccessToken = function (accessToken) {
   log.info('UPDATING SPOTIFY ACCESS TOKEN');
   this.spotify.accessToken = accessToken;
   this.save();
