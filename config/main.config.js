@@ -1,19 +1,15 @@
 module.exports = (() => {
-  const { ENVIRONMENT, REDISTOGO_URL } = process.env;
+  const { NODE_ENV, REDISTOGO_URL } = process.env;
 
   const PORT = process.env.PORT || 8888; // optionally set to heroku's default port
 
-  const LOG_LEVEL = ENVIRONMENT === 'development'
-    ? 'dev'
-    : 'common';
+  const SESSION_SECRET = NODE_ENV === 'production'
+    ? process.env.SESSION_SECRET_PROD
+    : process.env.SESSION_SECRET_DEV;
 
-  const SESSION_SECRET = ENVIRONMENT === 'development'
-    ? process.env.SESSION_SECRET_DEV
-    : process.env.SESSION_SECRET_PROD;
-
-  const MONGO_URL = ENVIRONMENT === 'development'
-    ? process.env.MONGO_DEV_URL
-    : process.env.MONGO_PROD_URL;
+  const MONGO_URL = NODE_ENV === 'production'
+    ? process.env.MONGO_PROD_URL
+    : process.env.MONGO_DEV_URL;
 
   const SLACK = {
     SCOPE: 'identity.basic',
@@ -41,26 +37,30 @@ module.exports = (() => {
       REDIRECT: '/authorize/slack/redirect',
       CALLBACK: '/authorize/slack/callback',
       get REDIRECT_URL() {
-        return ENVIRONMENT === 'development'
-          ? `http://localhost:${PORT + this.CALLBACK}`
-          : `https://calm-crag-28252.herokuapp.com${this.CALLBACK}`
-      }
+        return NODE_ENV === 'production'
+          ? `https://calm-crag-28252.herokuapp.com${this.CALLBACK}`
+          : `http://localhost:${PORT + this.CALLBACK}`;
+      },
     },
     SPOTIFY: {
       ROOT: '/authorize/spotify',
       REDIRECT: '/authorize/spotify/redirect',
       CALLBACK: '/authorize/spotify/callback',
       get REDIRECT_URL() {
-        return ENVIRONMENT === 'development'
-          ? `http://localhost:${PORT + this.CALLBACK}`
-          : `https://calm-crag-28252.herokuapp.com${this.CALLBACK}`
-      }
-    }
+        return NODE_ENV === 'production'
+          ? `https://calm-crag-28252.herokuapp.com${this.CALLBACK}`
+          : `http://localhost:${PORT + this.CALLBACK}`;
+      },
+      get ADD_TO_PLAYLIST() {
+        return NODE_ENV === 'production'
+          ? 'https://api.spotify.com/v1/users/1228406874/playlists/4qIaLCTPEef0Zsy8G4deZz/tracks'
+          : 'https://api.spotify.com/v1/users/1228406874/playlists/6tEWZb7ys1UJvyjK3Gmxj4/tracks';
+      },
+    },
   };
 
   return {
-    ENVIRONMENT,
-    LOG_LEVEL,
+    NODE_ENV,
     PORT,
     SESSION_SECRET,
     MONGO_URL,

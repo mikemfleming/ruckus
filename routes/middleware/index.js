@@ -29,6 +29,7 @@ exports.handleError = (err, req, res) => {
 };
 
 exports.slack = (req, res, next) => {
+
   const isUserGenerated = !!req.body.event && req.body.event.user;
   const isChallengeRequest = req.body.type === 'url_verification';
 
