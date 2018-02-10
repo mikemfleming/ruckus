@@ -12,8 +12,11 @@ When contributing to this repository, please first discuss the change you wish t
 - Check your Node version. I use v8.6.0 and recommend using Node Version Manager
 - Set up your environment variables
 
-## Run Tests
-- Run the tests `npm test`
+## Configure ESLint
+Ruckus uses the AirBnB style guide. 
+```
+npm i -g eslint eslint-config-airbnb eslint-plugin-jsx-a11y eslint-plugin-react eslint-plugin-import
+```
 
 ## Start Working
 - Start up your local mongo server `mongod`
