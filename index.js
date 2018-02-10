@@ -12,11 +12,20 @@ const cookieParser = require('cookie-parser');
 const flash = require('connect-flash');
 const session = require('express-session');
 const RedisStore = require('connect-redis')(session);
-const redisClient = require('redis').createClient(config.REDIS_URL);
+
 const passport = require('passport');
 const mongoose = require('mongoose');
 const helmet = require('helmet');
 const pino = require('express-pino-logger')({ logger: require('./logger') });
+
+var redisClient;
+if (!!process.env.REDISTOGO_URL) {
+	const rtg = require("url").parse(process.env.REDISTOGO_URL);
+	redisClient = require("redis").createClient(rtg.port, rtg.hostname);
+	redisClient.auth(rtg.auth.split(":")[1]);
+} else {
+	redisClient = require("redis").createClient();
+}
 
 mongoose.promise = Promise;
 
