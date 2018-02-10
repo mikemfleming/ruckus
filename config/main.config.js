@@ -48,7 +48,7 @@ module.exports = (() => {
       get REDIRECT_URL () {
         return ENVIRONMENT === 'development'
           ? `http://localhost:${PORT + this.CALLBACK}`
-          : `https://calm-crag-28252.herokuapp.com/${this.CALLBACK}`
+          : `https://calm-crag-28252.herokuapp.com${this.CALLBACK}`
       }
     },
     SPOTIFY: {
@@ -58,7 +58,7 @@ module.exports = (() => {
       get REDIRECT_URL () {
         return ENVIRONMENT === 'development'
           ? `http://localhost:${PORT + this.CALLBACK}`
-          : `https://calm-crag-28252.herokuapp.com/${this.CALLBACK}`
+          : `https://calm-crag-28252.herokuapp.com${this.CALLBACK}`
       }
     }
   };
