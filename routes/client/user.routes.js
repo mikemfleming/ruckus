@@ -1,4 +1,5 @@
 const log = require('../../logger');
+const path = require('path');
 
 exports.home = (req, res) => {
   log.info('RENDERING HOME PAGE');
@@ -17,7 +18,8 @@ exports.signup = (req, res) => {
 
 exports.profile = (req, res) => {
   log.info('RENDERING PROFILE PAGE');
-  res.render('profile.ejs', { user: req.user });
+  res.sendFile(path.join(__dirname, '../../index.html'));
+  // res.render('profile.ejs', { user: req.user });
 };
 
 exports.logout = (req, res) => {

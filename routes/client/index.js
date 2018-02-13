@@ -1,4 +1,6 @@
 const passport = require('passport');
+const browserify = require('browserify');
+const path = require('path');
 
 const User = require('./user.routes');
 const Oauth = require('./oauth.routes');
@@ -25,6 +27,14 @@ module.exports = (app) => {
   app.post(ENDPOINTS.SIGNUP, passport.authenticate('local-signup', passportOptions));
 
   app.get(ENDPOINTS.PROFILE, middleware.isLoggedIn, User.profile);
+  app.get('/main.js', (req, res) => {
+    res.setHeader('content-type', 'application/javascript');
+    browserify(path.join(__dirname, '../../src'), { extensions: ['.jsx'] })
+      .transform('babelify', { presets: ['env', 'react'] })
+      .bundle()
+      .pipe(res);
+  });
+
   app.get(ENDPOINTS.LOGOUT, User.logout);
 
   // slack oauth
