@@ -1,9 +1,7 @@
-'use strict';
-
 const log = require('../../logger');
 const { SLACK } = require('../../config/main.config');
 
-exports.isAuthorized = function (req, res, next) {
+exports.isAuthorized = (req, res, next) => {
   log.info('CHECKING AUTHORIZATION');
 
   // this is where we confirm this request came from slack
@@ -15,7 +13,7 @@ exports.isAuthorized = function (req, res, next) {
   }
 };
 
-exports.isLoggedIn = function (req, res, next) {
+exports.isLoggedIn = (req, res, next) => {
   log.info('CHECKING IF LOGGED IN');
   if (req.isAuthenticated()) {
     log.info('IS LOGGED IN');
@@ -25,12 +23,13 @@ exports.isLoggedIn = function (req, res, next) {
   res.redirect('/');
 };
 
-exports.handleError = function (err, req, res, next) {
+exports.handleError = (err, req, res) => {
   log.error(err);
   res.status(500).send({ error: err });
 };
 
-exports.slack = function (req, res, next) {
+exports.slack = (req, res, next) => {
+
   const isUserGenerated = !!req.body.event && req.body.event.user;
   const isChallengeRequest = req.body.type === 'url_verification';
 

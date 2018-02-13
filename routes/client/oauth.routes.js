@@ -1,12 +1,11 @@
-'use strict';
-const logger = require('../../logger');
+const log = require('../../logger');
 
 exports.authorizeSlack = (req, res) => {
-	logger.info('RENDERING SLACK AUTHORIZATION PAGE');
-	res.render('slack.ejs');
+  log.info('RENDERING SLACK AUTHORIZATION PAGE');
+  res.render('slack.ejs');
 };
 
 exports.authorizeSpotify = (req, res) => {
-	logger.info('RENDERING SPOTIFY AUTHORIZATION PAGE');
-	res.render('spotify.ejs');
+  log.info('RENDERING SPOTIFY AUTHORIZATION PAGE');
+  res.render('spotify.ejs');
 };

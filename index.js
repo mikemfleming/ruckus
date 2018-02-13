@@ -1,31 +1,27 @@
-'use strict';
-
 require('dotenv').config();
 
-const config = require('./config/main.config');
+const {
+  MONGO_URL,
+  SESSION_SECRET,
+  PORT,
+} = require('./config/main.config');
 
 const express = require('express');
-const router = require('express').Router();
-const app = express();
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const flash = require('connect-flash');
 const session = require('express-session');
-const RedisStore = require('connect-redis')(session);
-
 const passport = require('passport');
 const mongoose = require('mongoose');
 const helmet = require('helmet');
-const pino = require('express-pino-logger')({ logger: require('./logger') });
+const logger = require('./logger');
+const redisClient = require('./config/redis.config');
 
-var redisClient;
-if (!!process.env.REDISTOGO_URL) {
-	const rtg = require("url").parse(process.env.REDISTOGO_URL);
-	redisClient = require("redis").createClient(rtg.port, rtg.hostname);
-	redisClient.auth(rtg.auth.split(":")[1]);
-} else {
-	redisClient = require("redis").createClient();
-}
+const app = express();
+const router = express.Router();
+
+const RedisStore = require('connect-redis')(session);
+const pino = require('express-pino-logger')({ logger });
 
 mongoose.promise = Promise;
 
@@ -36,23 +32,21 @@ app.use(cookieParser());
 app.use(pino);
 
 // connect to mongo
-mongoose.connect(config.MONGO_URL);
+mongoose.connect(MONGO_URL);
 
 // configure passport
 require('./auth/passport.auth')(passport);
 
 // configure redis options
 const sessionOptions = {
-  // host: 'localhost',
-  // port: config.REDIS_PORT,
   client: redisClient,
-  ttl: 260
+  ttl: 260,
 };
 
 // set up session with redis memory store
 app.use(session({
   store: new RedisStore(sessionOptions),
-  secret: config.SESSION_SECRET
+  secret: SESSION_SECRET,
 }));
 
 // set up passport auth and ejs templating
@@ -68,6 +62,4 @@ require('./routes/api')(router);
 // configure client side routes
 require('./routes/client')(app);
 
-app.listen(config.PORT, function() {
-  console.log(`🐶  Ruckus is on port ${config.PORT}!`);
-});
+app.listen(PORT, () => console.log(`🐶  Ruckus is on port ${PORT}!`));

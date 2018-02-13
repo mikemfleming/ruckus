@@ -1,26 +1,24 @@
-'use strict';
-
 const Spotify = require('./spotify.controller');
 const Users = require('../models/users.model');
 const log = require('../logger');
 
-module.exports = function (req, res) {
-  const { team_id } = req.body;
+module.exports = (req, res) => {
+  const teamId = req.body.team_id;
   const { text } = req.body.event;
   const trackId = /https:\/\/open.spotify.com\/track\/(.{22})>?/.exec(text)[1];
 
+  function addToPlaylists(track) {
+    return (members) => {
+      Promise.all(members.map(account => Spotify.addToPlaylist(track, account)));
+    };
+  }
+
   if (text && trackId) {
     log.info('MESSAGE MATCHED REGEX FOR SPOTIFY TRACK');
-    Users.getSlackMembers(team_id)
+    Users.getSlackMembers(teamId)
       .then(addToPlaylists(trackId))
-      .catch((error) => log.error(error, 'ERROR ADDING TRACK TO MEMBER PLAYLISTS'));
+      .catch(error => log.error(error, 'ERROR ADDING TRACK TO MEMBER PLAYLISTS'));
   }
 
   return res.end();
-
-  function addToPlaylists (trackId) {
-    return (members) => {
-      return Promise.all(members.map((account) => Spotify.addToPlaylist(trackId, account)));
-    }
-  }
 };
