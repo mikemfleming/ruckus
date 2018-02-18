@@ -4,6 +4,7 @@ const querystring = require('querystring');
 const authUtil = require('../util/auth.util');
 const { SPOTIFY, ENDPOINTS } = require('../config/main.config');
 const Users = require('../models/users.model');
+const Spotify = require('../controllers/spotify.controller');
 
 const stateKey = 'spotify_auth_state'; // confirms req is from spotify
 
@@ -47,6 +48,34 @@ function getSpotifyTokens(authorizationCode, ruckusUserId) {
     .then(data => Object.assign(data, ruckusUserId));
 }
 
+function getUserId(accessToken, ruckusUser) {
+  const options = {
+    url: 'https://api.spotify.com/v1/me',
+    method: 'get',
+    headers: { Authorization: `Bearer ${accessToken}` },
+  };
+
+  return apiUtil.request(options)
+    .then(spotifyUser => ruckusUser.addSpotifyUserId(spotifyUser.id));
+}
+
+function createPlaylist(ruckusUser) {
+  const { userId, accessToken } = ruckusUser.spotify;
+  const options = {
+    url: `https://api.spotify.com/v1/users/${userId}/playlists`,
+    method: 'post',
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      'Content-Type': 'application/json',
+    },
+    body: {
+      name: 'Ruckus',
+      public: true,
+    },
+  };
+  return apiUtil.request(options)
+}
+
 function saveTokens(payload) {
   const accessToken = payload.access_token;
   const refreshToken = payload.refresh_token;
@@ -54,7 +83,11 @@ function saveTokens(payload) {
   if (!accessToken || !refreshToken) throw new Error('Tokens were not present in Spotify response.');
 
   return Users.findById(payload.ruckusUserId)
-    .then(user => user.addSpotifyTokens(accessToken, refreshToken));
+    .then((user) => {
+      return user.addSpotifyTokens(accessToken, refreshToken)
+        .then(user => getUserId(accessToken, user))
+        .then(createPlaylist);
+    });
 }
 
 exports.callback = (req, res) => {

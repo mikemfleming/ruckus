@@ -55,4 +55,10 @@ userSchema.methods.updateAccessToken = function (accessToken) {
   return this.save();
 };
 
+userSchema.methods.addSpotifyUserId = function (id) {
+  log.info('ADDING SPOTIFY USER ID');
+  this.spotify.userId = id;
+  return this.save();
+};
+
 module.exports = mongoose.model('User', userSchema);

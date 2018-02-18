@@ -4,7 +4,6 @@ const apiUtil = require('../util/api.util');
 const { ENDPOINTS } = require('../config/main.config');
 
 exports.addToPlaylist = (trackId, account) => {
-  // TODO: capture spotify user id and the playlist they want to add to
   const options = {
     url: ENDPOINTS.SPOTIFY.ADD_TO_PLAYLIST,
     method: 'post',
@@ -32,4 +31,16 @@ exports.addToPlaylist = (trackId, account) => {
       log.error(error.response.data, 'ERROR ADDING TRACK');
       throw error;
     });
+};
+
+exports.getUserId = (accessToken) => {
+  const options = {
+    url: 'https://api.spotify.com/v1/me',
+    method: 'get',
+    headers: { Authorization: `Bearer ${accessToken}` },
+  };
+
+  return apiUtil.request(options)
+    .then(console.log)
+    .catch(log.error);
 };

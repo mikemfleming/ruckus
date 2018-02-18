@@ -64,7 +64,7 @@ exports.callback = (req, res) => {
 
     getSlackDetails(code, { ruckusUserId })
       .then(saveTeam)
-      .then(() => res.redirect(ENDPOINTS.SPOTIFY.ROOT))
+      .then(() => res.redirect(ENDPOINTS.PROFILE))
       .catch((error) => {
         log.error(error);
         res.redirect(`/#${querystring.stringify({ error: error.message })}`);

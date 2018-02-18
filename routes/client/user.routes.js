@@ -1,4 +1,5 @@
 const log = require('../../logger');
+const Users = require('../../models/users.model');
 
 exports.home = (req, res) => {
   log.info('RENDERING HOME PAGE');
@@ -17,7 +18,17 @@ exports.signup = (req, res) => {
 
 exports.profile = (req, res) => {
   log.info('RENDERING PROFILE PAGE');
-  res.render('profile.ejs', { user: req.user });
+  const { _id } = req.user;
+  Users.findById(_id)
+    .then((user) => {
+      const slackEnabled = !!user.slack;
+      const spotifyEnabled = !!user.spotify;
+
+      if (!slackEnabled) log.info('PROMPTING USER TO ENABLED SLACK');
+      if (!spotifyEnabled) log.info('PROMPTING USER TO ENABLE SPOTIFY');
+
+      res.render('profile.ejs', { user, spotifyEnabled, slackEnabled });
+    });
 };
 
 exports.logout = (req, res) => {
