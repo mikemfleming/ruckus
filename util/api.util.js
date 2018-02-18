@@ -8,6 +8,7 @@ exports.request = (options) => {
     method: options.method,
     headers: options.headers,
     params: options.params,
+    data: options.data,
   };
 
   return axios(config)

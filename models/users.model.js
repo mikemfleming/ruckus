@@ -6,6 +6,7 @@ const spotifySchema = mongoose.Schema({
   userId: String,
   accessToken: String,
   refreshToken: String,
+  playlistId: String,
 });
 
 const slackSchema = mongoose.Schema({
@@ -58,6 +59,12 @@ userSchema.methods.updateAccessToken = function (accessToken) {
 userSchema.methods.addSpotifyUserId = function (id) {
   log.info('ADDING SPOTIFY USER ID');
   this.spotify.userId = id;
+  return this.save();
+};
+
+userSchema.methods.addSpotifyPlaylistId = function (id) {
+  log.info('ADDING SPOTIFY PLAYLIST ID');
+  this.spotify.playlistId = id;
   return this.save();
 };
 

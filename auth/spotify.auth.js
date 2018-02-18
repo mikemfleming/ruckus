@@ -68,12 +68,16 @@ function createPlaylist(ruckusUser) {
       Authorization: `Bearer ${accessToken}`,
       'Content-Type': 'application/json',
     },
-    body: {
+    data: {
       name: 'Ruckus',
       public: true,
     },
   };
   return apiUtil.request(options)
+    .then((response) => {
+      const { id } = response;
+      return ruckusUser.addSpotifyPlaylistId(id);
+    });
 }
 
 function saveTokens(payload) {
