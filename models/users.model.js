@@ -40,19 +40,19 @@ userSchema.statics.getSlackMembers = function (id) {
 userSchema.methods.addSlackDetails = function (userId, teamId) {
   log.info('WRITING SLACK DETAILS TO RUCKUS USER');
   this.slack = { userId, teamId };
-  this.save();
+  return this.save();
 };
 
 userSchema.methods.addSpotifyTokens = function (accessToken, refreshToken) {
   log.info('WRITING SPOTIFY DETAILS TO RUCKUS USER');
   this.spotify = { accessToken, refreshToken };
-  this.save();
+  return this.save();
 };
 
 userSchema.methods.updateAccessToken = function (accessToken) {
   log.info('UPDATING SPOTIFY ACCESS TOKEN');
   this.spotify.accessToken = accessToken;
-  this.save();
+  return this.save();
 };
 
 module.exports = mongoose.model('User', userSchema);

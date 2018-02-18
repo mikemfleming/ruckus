@@ -99,7 +99,7 @@ exports.refreshToken = (_id) => {
 
       return apiUtil.request(options)
         .then((data) => {
-          const { accessToken } = data;
+          const accessToken = data.access_token;
           return account.updateAccessToken(accessToken)
             .then(() => accessToken);
         })

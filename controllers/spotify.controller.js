@@ -25,6 +25,7 @@ exports.addToPlaylist = (trackId, account) => {
           .then((token) => {
             log.info('REFRESHED TOKEN, TRYING AGAIN');
             options.headers.Authorization = `Bearer ${token}`;
+            log.info(options)
             return apiUtil.request(options);
           });
       }
