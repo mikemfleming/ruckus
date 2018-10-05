@@ -1,52 +1,20 @@
 {
-  "name": "spot-dawg",
+  "name": "ruckus",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": ".eslintrc.js",
   "scripts": {
-    "start": "node index.js",
-    "test": "snyk test && ./node_modules/mocha/bin/mocha test --recursive",
-    "dev": "./node_modules/.bin/nodemon index.js",
-    "snyk-protect": "snyk protect",
-    "prepare": "npm run snyk-protect",
-    "proxy": "./node_modules/ngrok/bin/ngrok http -subdomain=ruckus 8888"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mikemfleming/ruckus.git"
+  },
+  "keywords": [],
   "author": "",
   "license": "ISC",
-  "dependencies": {
-    "axios": "^0.16.2",
-    "babel-core": "^6.26.0",
-    "babel-preset-env": "^1.6.1",
-    "babel-preset-react": "^6.24.1",
-    "babelify": "^8.0.0",
-    "bcrypt": "^1.0.3",
-    "body-parser": "^1.18.2",
-    "browserify": "^16.0.0",
-    "connect-flash": "^0.1.1",
-    "connect-redis": "^3.3.2",
-    "cookie-parser": "^1.4.3",
-    "dotenv": "^4.0.0",
-    "ejs": "^2.5.7",
-    "express": "^4.16.0",
-    "express-pino-logger": "^3.0.1",
-    "express-session": "^1.15.6",
-    "helmet": "^3.9.0",
-    "mongoose": "^4.11.14",
-    "nodemon": "^1.11.0",
-    "passport": "^0.4.0",
-    "passport-local": "^1.0.0",
-    "pino": "^4.10.3",
-    "querystring": "^0.2.0",
-    "react": "^16.2.0",
-    "react-dom": "^16.2.0",
-    "react-router": "^4.2.0",
-    "react-router-dom": "^4.2.2",
-    "redis": "^2.8.0",
-    "snyk": "^1.42.7"
+  "bugs": {
+    "url": "https://github.com/mikemfleming/ruckus/issues"
   },
-  "devDependencies": {
-    "mocha": "^4.0.1",
-    "ngrok": "^2.2.23"
-  },
-  "snyk": true
+  "homepage": "https://github.com/mikemfleming/ruckus#readme"
 }
