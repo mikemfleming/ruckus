@@ -2,7 +2,7 @@
   "name": "ruckus",
   "version": "1.0.0",
   "description": "",
-  "main": ".eslintrc.js",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/mikemfleming/ruckus/issues"
   },
-  "homepage": "https://github.com/mikemfleming/ruckus#readme"
+  "homepage": "https://github.com/mikemfleming/ruckus#readme",
+  "devDependencies": {
+    "claudia": "^5.1.2"
+  }
 }
