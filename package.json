@@ -19,5 +19,7 @@
   "homepage": "https://github.com/mikemfleming/ruckus#readme",
   "devDependencies": {
     "claudia": "^5.1.2"
+  },
+  "dependencies": {
   }
 }
