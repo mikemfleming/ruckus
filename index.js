@@ -11,9 +11,8 @@ exports.handler = async event => {
 			Buffer.from(event.body, 'base64').toString()
 		)
 
-		const output = slackbot(input)
+		payload = slackbot(input)
 
-		payload = JSON.stringify(output)
 	} catch (error) {
 		payload = error.message
 	}
