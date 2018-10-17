@@ -17,7 +17,8 @@ exports.add = track => {
             'Content-Type': 'application/x-www-form-urlencoded',
         },
     }
-
+    return 'adding track!'
+    
     return apiUtil.request(options)
         .then(() => console.log('success')) // success logic: maybe just return 'added track!'
         .catch(({ error }) => {

@@ -1,5 +1,5 @@
 
-const save = require('./actions/save')
+const save = require('./actions/save.action')
 const configure = require('./actions/configure.action')
 
 // ["token","team_id","team_domain","channel_id","channel_name","user_id","user_name","command","text","response_url","trigger_id"]
