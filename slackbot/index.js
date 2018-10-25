@@ -11,7 +11,7 @@ module.exports = (input) => {
 
     switch (action) {
     case 'save':
-        return save(args)
+        return save(args, input.user_name)
     case 'configure':
         return configure(args)
     default:

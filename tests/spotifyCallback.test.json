@@ -1,0 +1,6 @@
+{
+	"queryStringParameters": {
+		"code": "testCode",
+		"state": "testState"
+	}
+}

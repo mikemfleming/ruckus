@@ -26,6 +26,9 @@
     "eslint-plugin-import": "^2.14.0"
   },
   "dependencies": {
-    "axios": "^0.18.0"
+    "aws-sdk": "^2.337.0",
+    "axios": "^0.18.0",
+    "bcrypt": "^3.0.2",
+    "uuid": "^3.3.2"
   }
 }

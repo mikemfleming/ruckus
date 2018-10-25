@@ -13,7 +13,7 @@ exports.handler = async event => {
 			// request is from spotify
 			const { code, state } = event.queryStringParameters
 
-			payload = await spotifyAuth.callback({ code, state })
+			payload = await spotifyAuth.callback(code, state)
 		} else {
 			if (!event.body) throw new Error('No request body detected')
 
